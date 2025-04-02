@@ -18,3 +18,4 @@ HotelService.Api/appsettings.json
 *.json
 
 HotelService.sln
+HotelService.Logic/.DS_Store
