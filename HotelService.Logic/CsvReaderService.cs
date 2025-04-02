@@ -7,7 +7,7 @@ namespace HotelService.Logic;
 
 public class CsvReaderService
 {
-    private readonly string _filePath = "/Users/asyayakimova/RiderProjects/HotelService/HotelService.Logic/extra_data.csv";
+    private readonly string _filePath = "C:\\Users\\Instruktor\\RiderProjects\\HotelService\\HotelService.Logic\\extra_data.csv";
     public async Task<(List<HotelDto> Hotels, int TotalCount)> GetHotelsPaginatedAsync(int pageNumber, int pageSize)
     {
         using var reader = new StreamReader(_filePath);
@@ -34,7 +34,7 @@ public class CsvReaderService
                 Name = csv.TryGetField<string>("name", out var name) ? name : "Unknown",
                 Description = csv.TryGetField<string>("description", out var desc) ? desc : "No description",
                 ThumbnailUrl = csv.TryGetField<string>("thumbnail_url", out var url) ? url : "",
-                LogPrice = csv.TryGetField<decimal>("log_price", out var price) ? price : 0
+                LogPrice = csv.TryGetField<double>("log_price", out var price) ? price : 0
             };
 
 

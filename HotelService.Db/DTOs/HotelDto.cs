@@ -6,5 +6,5 @@ public class HotelDto
     public string Name { get; set; }
     public string Description { get; set; }
     public string ThumbnailUrl { get; set; }
-    public decimal LogPrice { get; set; } 
+    public double LogPrice { get; set; } 
 }
