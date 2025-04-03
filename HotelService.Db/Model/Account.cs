@@ -2,13 +2,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HotelService.Db.Model;
 
-public class User
+public class Account
 {
     [Key]
-    public int UserId { get; set; }
+    public int AccountId { get; set; }
     [Required]
     public string? Username { get; set; }
-    [Required]
+   
     [EmailAddress]
     public string Email { get; set; }
 

@@ -7,9 +7,9 @@ public class Host
 {
     [Key]
     public int HostId { get; set; }
-    [ForeignKey("User")]
+    [ForeignKey("Account")]
     public int UserId { get; set; }
-    public User User { get; set; }
+    public Account Account { get; set; }
     public string CompanyName { get; set; }
     
     public ICollection<Hotel> Hotels { get; set; }

@@ -1,16 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using HotelService.Db.Model;
 
-namespace HotelService.Db;
+namespace HotelService.Db.Model;
 
 public class Customer
 {
     [Key]
     public int CustomerId { get; set; }
-    [ForeignKey("User")]
+    [ForeignKey("Account")]
     public int UserId { get; set; }
-    public User User { get; set; }
+    public Account Account { get; set; }
   
     public string FirstName { get; set; }
     public string LastName { get; set; }
