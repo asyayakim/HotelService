@@ -7,9 +7,9 @@ public class Customer
 {
     [Key]
     public int CustomerId { get; set; }
-    [ForeignKey("Account")]
+    [ForeignKey("User")]
     public int UserId { get; set; }
-    public Account Account { get; set; }
+    public User User { get; set; }
   
     public string FirstName { get; set; }
     public string LastName { get; set; }

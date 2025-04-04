@@ -2,10 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HotelService.Db.Model;
 
-public class Account
+public class User
 {
     [Key]
-    public int AccountId { get; set; }
+    public int UserId { get; set; }
     [Required]
     public string? Username { get; set; }
    

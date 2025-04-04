@@ -10,7 +10,7 @@ public class AppDbContext : DbContext
         : base(options)
     {
     }
-    public DbSet<Account> Accounts { get; set; }
+    public DbSet<User> Users { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Host> Hosts { get; set; }
     public DbSet<Hotel> Hotels { get; set; }
