@@ -1,7 +1,9 @@
+using HotelService.Db;
 using HotelService.Db.DTOs;
 using HotelService.Logic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using HotelService.Db.Model;
 
 namespace HotelService.Api.Controllers;
 [ApiController]
@@ -9,10 +11,12 @@ namespace HotelService.Api.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly AuthService _authService;
+    private readonly DbRepository _dbRepository;
 
-    public AuthController(AuthService authService)
+    public AuthController(AuthService authService, DbRepository dbRepository)
     {
         _authService = authService;
+        _dbRepository = dbRepository;
     }
 
     [AllowAnonymous]
@@ -21,28 +25,21 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var existingUser = await _authService.GetUsersDataAsync(request.Username);
+            var existingUser = await _dbRepository.GetUsersDataByEmailAsync(request.Email);
             if (existingUser != null)
             {
-                return BadRequest($"User with username '{request.Username}' already exists.");
+                return BadRequest($"User with email '{request.Username}' already registered.");
             }
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword( request.Password);
             string role = string.IsNullOrEmpty(request.Role) ? "User" : request.Role;
-            var newUser =
-                await _authService.AddUserDataAsync
+            var newUser = 
+                await _dbRepository.AddNewUserDataAsync
                 (request.Username, hashedPassword,
                     request.Email, role);
 
             return Ok(new
             {
                 Message = "User registered successfully.",
-                User = new
-                {
-                    Id = newUser.Id,
-                    UserName = newUser.UserName,
-                    Email = newUser.Email,
-                    Role = newUser.Role
-                }
             });
         }
         catch (InvalidOperationException ex)
@@ -56,10 +53,9 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var user = await _authService.GetUsersDataAsync(request.Username);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            var user = await _dbRepository.GetUsersDataAsync(request.Username, request.Email);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
-                Console.WriteLine("Login failed: Invalid username or password.");
                 return Unauthorized("Invalid username or password.");
             }
             var token = _authService.GenerateJwtToken(user);
@@ -68,8 +64,8 @@ public class AuthController : ControllerBase
                 Token = token,
                 User = new
                 {
-                    Id = user.Id,
-                    UserName = user.UserName,
+                    Id = user.UserId,
+                    UserName = user.Username,
                     Email = user.Email,
                     Role = user.Role
                 }

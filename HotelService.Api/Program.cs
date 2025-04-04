@@ -12,6 +12,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<CsvReaderService>();
+builder.Services.AddScoped<DbRepository>();
+builder.Services.AddScoped<AuthService>();
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>
