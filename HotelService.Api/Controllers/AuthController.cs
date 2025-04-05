@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
             var existingUser = await _dbRepository.GetUsersDataByEmailAsync(request.Email);
             if (existingUser != null)
             {
-                return BadRequest($"User with email '{request.Username}' already registered.");
+                return BadRequest($"User with email '{request.Email}' already registered.");
             }
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword( request.Password);
             string role = string.IsNullOrEmpty(request.Role) ? "User" : request.Role;
@@ -56,7 +56,7 @@ public class AuthController : ControllerBase
             var user = await _dbRepository.GetUsersDataAsync(request.Username, request.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
-                return Unauthorized("Invalid username or password.");
+                return Unauthorized("Invalid username/email or password.");
             }
             var token = _authService.GenerateJwtToken(user);
             return Ok(new
