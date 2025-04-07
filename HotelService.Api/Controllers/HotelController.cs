@@ -1,4 +1,5 @@
 using HotelService.Db;
+using HotelService.Db.DTOs;
 using HotelService.Logic;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +33,6 @@ public class HotelController : ControllerBase
                 TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
                 Hotels = hotels
             };
-
             return Ok(response);
         }
         catch (Exception e)
@@ -41,5 +41,18 @@ public class HotelController : ControllerBase
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
     }
-
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetHotelById(int id)
+    {
+        try
+        {
+            var hotel = await _csvReaderService.GetHotelsByIdAsync(id);
+            return Ok(hotel);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}"); // Log error to console
+            return StatusCode(500, $"An error occurred: {e.Message}");
+        }
+    }
 }

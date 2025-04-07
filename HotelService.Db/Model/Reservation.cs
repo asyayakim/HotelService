@@ -17,5 +17,6 @@ public class Reservation
     [Required]
     public DateTime CheckOutDate { get; set; }
     public decimal TotalPrice { get; set; }
+    public string Status { get; set; }
 
 }
