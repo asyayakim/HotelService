@@ -14,6 +14,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<CsvReaderService>();
 builder.Services.AddScoped<DbRepository>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ReservationService>();
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -22,7 +23,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173") 
+        policy.WithOrigins("http://localhost:5174", "http://localhost:5173" ) 
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using HotelService.Db.DTOs;
 
 namespace HotelService.Db.Model;
 
@@ -20,5 +21,6 @@ public class Hotel
     public bool HasThumbnail { get; set; } 
     
     public bool IsActive { get; set; } = true;
-    public ICollection<Reservation> Reservations { get; set; }
+    public ICollection<ReservationDto> Reservations { get; set; }
+    public ICollection<Room> Rooms { get; set; }
 }

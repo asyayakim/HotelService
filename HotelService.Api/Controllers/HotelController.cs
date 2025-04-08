@@ -11,11 +11,13 @@ public class HotelController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly CsvReaderService _csvReaderService;
+    private readonly DbRepository _dbRepository;
 
-    public HotelController(AppDbContext context, CsvReaderService csvReaderService)
+    public HotelController(AppDbContext context, CsvReaderService csvReaderService, DbRepository dbRepository)
     {
         _context = context;
         _csvReaderService = csvReaderService;
+        _dbRepository = dbRepository;
     }
 
     [HttpGet]
@@ -37,7 +39,7 @@ public class HotelController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}"); // Log error to console
+            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}"); 
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
     }
@@ -51,7 +53,21 @@ public class HotelController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}"); // Log error to console
+            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}"); 
+            return StatusCode(500, $"An error occurred: {e.Message}");
+        }
+    }
+    [HttpGet("from-db{id:int}")]
+    public async Task<IActionResult> GetHotelByIdFromDb(int id)
+    {
+        try
+        {
+            var hotel = await _dbRepository.GetHotelsByIdAsync(id);
+            return Ok(hotel);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}");
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
     }

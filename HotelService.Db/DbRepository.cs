@@ -1,3 +1,4 @@
+using HotelService.Db.DTOs;
 using HotelService.Db.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,5 +38,22 @@ public class DbRepository
     {
         return await _dbContext.Users
             .FirstOrDefaultAsync(u => u.Username == requestUsername || u.Email == requestEmail);
+    }
+
+    public async Task<HotelDto?> GetHotelsByIdAsync(int id)
+    {
+        var searchedHotel = await _dbContext.Hotels.FindAsync(id);
+        if (searchedHotel == null)
+            return null;
+        var hotel = new HotelDto()
+        {
+            Id = searchedHotel.HotelId,
+            Name = searchedHotel.Name,
+            Description = searchedHotel.Description,
+            ThumbnailUrl = searchedHotel.ThumbnailUrl,
+            LogPrice = searchedHotel.LogPrice,
+            Reservations = searchedHotel.Reservations
+        };
+        return hotel;
     }
 }
