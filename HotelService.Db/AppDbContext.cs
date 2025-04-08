@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
     public DbSet<Hotel> Hotels { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
     public DbSet<PaymentMethod> PaymentMethods { get; set; }
+    public DbSet<Room> Rooms { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)

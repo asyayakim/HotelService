@@ -18,5 +18,8 @@ public class Reservation
     public DateTime CheckOutDate { get; set; }
     public decimal TotalPrice { get; set; }
     public string Status { get; set; }
-
+    [ForeignKey("PaymentMethod")]
+    public int PaymentMethodId { get; set; }
+    public PaymentMethod PaymentMethod { get; set; }
+    public int AdultsCount { get; set; } = 2;
 }

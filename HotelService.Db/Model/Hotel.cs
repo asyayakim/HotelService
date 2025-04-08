@@ -21,6 +21,6 @@ public class Hotel
     public bool HasThumbnail { get; set; } 
     
     public bool IsActive { get; set; } = true;
-    public ICollection<ReservationDto> Reservations { get; set; }
+    public ICollection<Reservation> Reservations { get; set; }
     public ICollection<Room> Rooms { get; set; }
 }

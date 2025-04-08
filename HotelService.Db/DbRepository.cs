@@ -40,14 +40,14 @@ public class DbRepository
             .FirstOrDefaultAsync(u => u.Username == requestUsername || u.Email == requestEmail);
     }
 
-    public async Task<HotelDto?> GetHotelsByIdAsync(int id)
+    public async Task<Hotel?> GetHotelsByIdAsync(int id)
     {
         var searchedHotel = await _dbContext.Hotels.FindAsync(id);
         if (searchedHotel == null)
             return null;
-        var hotel = new HotelDto()
+        var hotel = new Hotel()
         {
-            Id = searchedHotel.HotelId,
+            HotelId = searchedHotel.HotelId,
             Name = searchedHotel.Name,
             Description = searchedHotel.Description,
             ThumbnailUrl = searchedHotel.ThumbnailUrl,
