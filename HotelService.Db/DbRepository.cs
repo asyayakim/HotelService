@@ -51,7 +51,7 @@ public class DbRepository
             Name = searchedHotel.Name,
             Description = searchedHotel.Description,
             ThumbnailUrl = searchedHotel.ThumbnailUrl,
-            LogPrice = searchedHotel.LogPrice,
+            Price = searchedHotel.Price,
             Reservations = searchedHotel.Reservations
         };
         return hotel;

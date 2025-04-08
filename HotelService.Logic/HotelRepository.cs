@@ -19,7 +19,15 @@ public class HotelRepository
         {
             return null;
         }
-        await _appDbContextdb.Hotels.AddAsync(hotel);
+        var newHotel = new Hotel
+        {
+            Name = hotel.Name,
+            Description = hotel.Description,
+            ThumbnailUrl = hotel.ThumbnailUrl,
+            Price = hotel.Price,
+            IsActive = hotel.IsActive,
+        };
+        await _appDbContextdb.Hotels.AddAsync(newHotel);
         await _appDbContextdb.SaveChangesAsync();
         return hotel;
     }

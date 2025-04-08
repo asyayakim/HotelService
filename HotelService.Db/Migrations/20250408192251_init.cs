@@ -102,13 +102,12 @@ namespace HotelService.Db.Migrations
                 {
                     HotelId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    HostId = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     ThumbnailUrl = table.Column<string>(type: "text", nullable: false),
-                    LogPrice = table.Column<double>(type: "double precision", nullable: false),
-                    HasThumbnail = table.Column<bool>(type: "boolean", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                    Price = table.Column<double>(type: "double precision", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    HostId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -117,8 +116,7 @@ namespace HotelService.Db.Migrations
                         name: "FK_Hotels_Hosts_HostId",
                         column: x => x.HostId,
                         principalTable: "Hosts",
-                        principalColumn: "HostId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "HostId");
                 });
 
             migrationBuilder.CreateTable(
@@ -129,7 +127,8 @@ namespace HotelService.Db.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     HotelId = table.Column<int>(type: "integer", nullable: false),
                     RoomType = table.Column<string>(type: "text", nullable: false),
-                    PricePerNight = table.Column<decimal>(type: "numeric", nullable: false)
+                    PricePerNight = table.Column<decimal>(type: "numeric", nullable: false),
+                    ThumbnailRoom = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

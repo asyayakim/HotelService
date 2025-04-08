@@ -89,21 +89,18 @@ namespace HotelService.Db.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("HasThumbnail")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("HostId")
+                    b.Property<int?>("HostId")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<double>("LogPrice")
-                        .HasColumnType("double precision");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("ThumbnailUrl")
                         .IsRequired()
@@ -224,6 +221,10 @@ namespace HotelService.Db.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ThumbnailRoom")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("RoomId");
 
                     b.HasIndex("HotelId");
@@ -286,13 +287,9 @@ namespace HotelService.Db.Migrations
 
             modelBuilder.Entity("HotelService.Db.Model.Hotel", b =>
                 {
-                    b.HasOne("HotelService.Db.Model.Host", "Host")
+                    b.HasOne("HotelService.Db.Model.Host", null)
                         .WithMany("Hotels")
-                        .HasForeignKey("HostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Host");
+                        .HasForeignKey("HostId");
                 });
 
             modelBuilder.Entity("HotelService.Db.Model.PaymentMethod", b =>
