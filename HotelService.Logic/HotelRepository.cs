@@ -1,4 +1,5 @@
 using HotelService.Db;
+using HotelService.Db.DTOs;
 using HotelService.Db.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +14,7 @@ public class HotelRepository
         _appDbContextdb = appDbContextdb;
     }
 
-    public async Task<Hotel?> AddHotelAsync(Hotel hotel)
+    public async Task<Hotel> AddHotelAsync(HotelCreateDto hotel)
     {
         var existingHotel = await _appDbContextdb.Hotels
             .FirstOrDefaultAsync(h => h.Name == hotel.Name);
@@ -35,17 +36,15 @@ public class HotelRepository
         await _appDbContextdb.SaveChangesAsync();
         if (hotel.Rooms != null && hotel.Rooms.Any())
         {
-            foreach (var room in hotel.Rooms)
+            var newRooms = hotel.Rooms.Select(room => new Room
             {
-                newHotel.Rooms.Add(new Room
-                {
-                    RoomType = room.RoomType,
-                    PricePerNight = room.PricePerNight,
-                    ThumbnailRoom = room.ThumbnailRoom,
-                    HotelId = newHotel.HotelId
-                });
-            }
+                RoomType = room.RoomType,
+                PricePerNight = room.PricePerNight,
+                ThumbnailRoom = room.ThumbnailRoom,
+                HotelId = newHotel.HotelId
+            }).ToList();
 
+            await _appDbContextdb.Rooms.AddRangeAsync(newRooms);
             await _appDbContextdb.SaveChangesAsync();
         }
 
@@ -57,8 +56,6 @@ public class HotelRepository
         var hotel =  await _appDbContextdb.Hotels.FirstOrDefaultAsync(h => h.HotelId == room.HotelId);
         if (hotel == null)
             return null;
-        if (hotel == null)
-            return null;
 
         await _appDbContextdb.Rooms.AddAsync(room);
         await _appDbContextdb.SaveChangesAsync();
@@ -66,7 +63,7 @@ public class HotelRepository
         return room;
     }
 
-    public async Task<List<Hotel>> AddManyHotelsAsync(List<Hotel> hotels)
+    public async Task<List<Hotel>> AddManyHotelsAsync(List<HotelCreateDto> hotels)
     {
         var addedHotels = new List<Hotel>();
         foreach (var hotel in hotels)
@@ -86,6 +83,21 @@ public class HotelRepository
 
                 await _appDbContextdb.Hotels.AddAsync(newHotel);
                 addedHotels.Add(newHotel);
+                if (hotel.Rooms != null && hotel.Rooms.Any())
+                {
+                    foreach (var room in hotel.Rooms)
+                    {
+                        newHotel.Rooms.Add(new Room
+                        {
+                            RoomType = room.RoomType,
+                            PricePerNight = room.PricePerNight,
+                            ThumbnailRoom = room.ThumbnailRoom,
+                            HotelId = newHotel.HotelId
+                        });
+                    }
+
+                    await _appDbContextdb.SaveChangesAsync();
+                }
             }
         }
         if (addedHotels.Any())

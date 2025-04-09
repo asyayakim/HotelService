@@ -77,7 +77,7 @@ public class HotelController : ControllerBase
         }
     }
     [HttpPost("create-many")]
-    public async Task<IActionResult> CreateManyHotels([FromBody] List<Hotel> hotels)
+    public async Task<IActionResult> CreateManyHotels([FromBody] List<HotelCreateDto> hotels)
     {
         try
         {
@@ -93,7 +93,7 @@ public class HotelController : ControllerBase
         }
     }
     [HttpPost("create")]
-    public async Task<IActionResult> CreateHotel([FromBody] Hotel hotel)
+    public async Task<IActionResult> CreateHotel([FromBody] HotelCreateDto hotel)
     {
         try
         {

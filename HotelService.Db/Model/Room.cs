@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace HotelService.Db.Model;
 
-public class Room : IEnumerable
+public class Room 
 {
     [Key]
     public int RoomId { get; set; }
@@ -21,9 +21,4 @@ public class Room : IEnumerable
     public string ThumbnailRoom { get; set; }
     [JsonIgnore]
     public ICollection<Reservation> Reservations { get; set; }
-
-    public IEnumerator GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
 }
