@@ -55,28 +55,6 @@ namespace HotelService.Db.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("HotelService.Db.Model.Host", b =>
-                {
-                    b.Property<int>("HostId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("HostId"));
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("HostId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Hosts");
-                });
-
             modelBuilder.Entity("HotelService.Db.Model.Hotel", b =>
                 {
                     b.Property<int>("HotelId")
@@ -88,9 +66,6 @@ namespace HotelService.Db.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int?>("HostId")
-                        .HasColumnType("integer");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -107,8 +82,6 @@ namespace HotelService.Db.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("HotelId");
-
-                    b.HasIndex("HostId");
 
                     b.ToTable("Hotels");
                 });
@@ -269,24 +242,6 @@ namespace HotelService.Db.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HotelService.Db.Model.Host", b =>
-                {
-                    b.HasOne("HotelService.Db.Model.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("HotelService.Db.Model.Hotel", b =>
-                {
-                    b.HasOne("HotelService.Db.Model.Host", null)
-                        .WithMany("Hotels")
-                        .HasForeignKey("HostId");
-                });
-
             modelBuilder.Entity("HotelService.Db.Model.PaymentMethod", b =>
                 {
                     b.HasOne("HotelService.Db.Model.Customer", "Customer")
@@ -337,11 +292,6 @@ namespace HotelService.Db.Migrations
                     b.Navigation("PaymentMethods");
 
                     b.Navigation("Reservations");
-                });
-
-            modelBuilder.Entity("HotelService.Db.Model.Host", b =>
-                {
-                    b.Navigation("Hotels");
                 });
 
             modelBuilder.Entity("HotelService.Db.Model.Hotel", b =>

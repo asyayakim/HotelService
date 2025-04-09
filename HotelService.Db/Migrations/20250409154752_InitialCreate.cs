@@ -7,11 +7,28 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HotelService.Db.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Hotels",
+                columns: table => new
+                {
+                    HotelId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    ThumbnailUrl = table.Column<string>(type: "text", nullable: false),
+                    Price = table.Column<double>(type: "double precision", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Hotels", x => x.HotelId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -27,6 +44,28 @@ namespace HotelService.Db.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Rooms",
+                columns: table => new
+                {
+                    RoomId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    HotelId = table.Column<int>(type: "integer", nullable: false),
+                    RoomType = table.Column<string>(type: "text", nullable: false),
+                    PricePerNight = table.Column<decimal>(type: "numeric", nullable: false),
+                    ThumbnailRoom = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rooms", x => x.RoomId);
+                    table.ForeignKey(
+                        name: "FK_Rooms_Hotels_HotelId",
+                        column: x => x.HotelId,
+                        principalTable: "Hotels",
+                        principalColumn: "HotelId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -46,26 +85,6 @@ namespace HotelService.Db.Migrations
                     table.PrimaryKey("PK_Customers", x => x.CustomerId);
                     table.ForeignKey(
                         name: "FK_Customers_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Hosts",
-                columns: table => new
-                {
-                    HostId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    CompanyName = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Hosts", x => x.HostId);
-                    table.ForeignKey(
-                        name: "FK_Hosts_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -93,51 +112,6 @@ namespace HotelService.Db.Migrations
                         column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Hotels",
-                columns: table => new
-                {
-                    HotelId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    ThumbnailUrl = table.Column<string>(type: "text", nullable: false),
-                    Price = table.Column<double>(type: "double precision", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    HostId = table.Column<int>(type: "integer", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Hotels", x => x.HotelId);
-                    table.ForeignKey(
-                        name: "FK_Hotels_Hosts_HostId",
-                        column: x => x.HostId,
-                        principalTable: "Hosts",
-                        principalColumn: "HostId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Rooms",
-                columns: table => new
-                {
-                    RoomId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    HotelId = table.Column<int>(type: "integer", nullable: false),
-                    RoomType = table.Column<string>(type: "text", nullable: false),
-                    PricePerNight = table.Column<decimal>(type: "numeric", nullable: false),
-                    ThumbnailRoom = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Rooms", x => x.RoomId);
-                    table.ForeignKey(
-                        name: "FK_Rooms_Hotels_HotelId",
-                        column: x => x.HotelId,
-                        principalTable: "Hotels",
-                        principalColumn: "HotelId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -185,16 +159,6 @@ namespace HotelService.Db.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Hosts_UserId",
-                table: "Hosts",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Hotels_HostId",
-                table: "Hotels",
-                column: "HostId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PaymentMethods_CustomerId",
                 table: "PaymentMethods",
                 column: "CustomerId");
@@ -237,9 +201,6 @@ namespace HotelService.Db.Migrations
 
             migrationBuilder.DropTable(
                 name: "Hotels");
-
-            migrationBuilder.DropTable(
-                name: "Hosts");
 
             migrationBuilder.DropTable(
                 name: "Users");

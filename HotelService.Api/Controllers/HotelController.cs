@@ -76,7 +76,22 @@ public class HotelController : ControllerBase
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
     }
-
+    [HttpPost("create-many")]
+    public async Task<IActionResult> CreateManyHotels([FromBody] List<Hotel> hotels)
+    {
+        try
+        {
+            var hotelsDb = await _service.AddManyHotelsAsync(hotels);
+            if (hotelsDb == null)
+                return BadRequest("Hotels with the same name already exists.");
+            return Ok(hotelsDb);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return StatusCode(500, $"An error occurred: {e.Message}");
+        }
+    }
     [HttpPost("create")]
     public async Task<IActionResult> CreateHotel([FromBody] Hotel hotel)
     {
@@ -85,6 +100,22 @@ public class HotelController : ControllerBase
             var hotelDb = await _service.AddHotelAsync(hotel);
             if (hotelDb == null)
                 return BadRequest("Hotel with the same name already exists.");
+            return Ok(hotelDb);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return StatusCode(500, $"An error occurred: {e.Message}");
+        }
+    }
+    [HttpPost("add-rooms")]
+    public async Task<IActionResult> AddRoomsToHotelAsync([FromBody] Room room)
+    {
+        try
+        {
+            var hotelDb = await _service.AddRoomsAsync(room);
+            if (hotelDb == null)
+                return BadRequest("Hotel is not exist.");
             return Ok(hotelDb);
         }
         catch (Exception e)
