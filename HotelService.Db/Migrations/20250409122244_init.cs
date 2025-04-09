@@ -155,7 +155,6 @@ namespace HotelService.Db.Migrations
                     Status = table.Column<string>(type: "text", nullable: false),
                     PaymentMethodId = table.Column<int>(type: "integer", nullable: false),
                     AdultsCount = table.Column<int>(type: "integer", nullable: false),
-                    HotelId = table.Column<int>(type: "integer", nullable: true),
                     RoomId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -167,11 +166,6 @@ namespace HotelService.Db.Migrations
                         principalTable: "Customers",
                         principalColumn: "CustomerId",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Reservations_Hotels_HotelId",
-                        column: x => x.HotelId,
-                        principalTable: "Hotels",
-                        principalColumn: "HotelId");
                     table.ForeignKey(
                         name: "FK_Reservations_PaymentMethods_PaymentMethodId",
                         column: x => x.PaymentMethodId,
@@ -209,11 +203,6 @@ namespace HotelService.Db.Migrations
                 name: "IX_Reservations_CustomerId",
                 table: "Reservations",
                 column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reservations_HotelId",
-                table: "Reservations",
-                column: "HotelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_PaymentMethodId",

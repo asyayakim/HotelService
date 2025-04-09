@@ -1,5 +1,6 @@
 using HotelService.Db;
 using HotelService.Db.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelService.Logic;
 
@@ -14,11 +15,14 @@ public class HotelRepository
 
     public async Task<Hotel?> AddHotelAsync(Hotel hotel)
     {
-        var name = _appDbContextdb.Hotels.FindAsync(hotel.Name);
-        if (name != null)
+        var existingHotel = await _appDbContextdb.Hotels
+            .FirstOrDefaultAsync(h => h.Name == hotel.Name);
+    
+        if (existingHotel != null)
         {
             return null;
         }
+
         var newHotel = new Hotel
         {
             Name = hotel.Name,
@@ -29,6 +33,22 @@ public class HotelRepository
         };
         await _appDbContextdb.Hotels.AddAsync(newHotel);
         await _appDbContextdb.SaveChangesAsync();
-        return hotel;
+        if (hotel.Rooms != null && hotel.Rooms.Any())
+        {
+            foreach (var room in hotel.Rooms)
+            {
+                newHotel.Rooms.Add(new Room
+                {
+                    RoomType = room.RoomType,
+                    PricePerNight = room.PricePerNight,
+                    ThumbnailRoom = room.ThumbnailRoom,
+                    HotelId = newHotel.HotelId
+                });
+            }
+
+            await _appDbContextdb.SaveChangesAsync();
+        }
+
+        return newHotel;
     }
 }

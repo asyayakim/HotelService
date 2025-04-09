@@ -10,12 +10,13 @@ public class Room
     public int RoomId { get; set; }
     [ForeignKey("Hotel")]
     public int HotelId { get; set; }
+    [JsonIgnore]
     public Hotel Hotel { get; set; }
     [Required]
     public string RoomType { get; set; }
     public decimal PricePerNight { get; set; }
-    [JsonIgnore]
+
     public string ThumbnailRoom { get; set; }
-  
+    [JsonIgnore]
     public ICollection<Reservation> Reservations { get; set; }
 }

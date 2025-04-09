@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HotelService.Db.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250408192251_init")]
+    [Migration("20250409122244_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -174,9 +174,6 @@ namespace HotelService.Db.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("HotelId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("PaymentMethodId")
                         .HasColumnType("integer");
 
@@ -196,8 +193,6 @@ namespace HotelService.Db.Migrations
                     b.HasKey("ReservationId");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("HotelId");
 
                     b.HasIndex("PaymentMethodId");
 
@@ -314,10 +309,6 @@ namespace HotelService.Db.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HotelService.Db.Model.Hotel", null)
-                        .WithMany("Reservations")
-                        .HasForeignKey("HotelId");
-
                     b.HasOne("HotelService.Db.Model.PaymentMethod", "PaymentMethod")
                         .WithMany("Reservations")
                         .HasForeignKey("PaymentMethodId")
@@ -358,8 +349,6 @@ namespace HotelService.Db.Migrations
 
             modelBuilder.Entity("HotelService.Db.Model.Hotel", b =>
                 {
-                    b.Navigation("Reservations");
-
                     b.Navigation("Rooms");
                 });
 

@@ -52,7 +52,7 @@ public class DbRepository
             Description = searchedHotel.Description,
             ThumbnailUrl = searchedHotel.ThumbnailUrl,
             Price = searchedHotel.Price,
-            Reservations = searchedHotel.Reservations
+            Rooms = searchedHotel.Rooms
         };
         return hotel;
     }

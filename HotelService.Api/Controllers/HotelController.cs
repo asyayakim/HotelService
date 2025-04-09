@@ -84,7 +84,7 @@ public class HotelController : ControllerBase
         {
             var hotelDb = await _service.AddHotelAsync(hotel);
             if (hotelDb == null)
-                return BadRequest();
+                return BadRequest("Hotel with the same name already exists.");
             return Ok(hotelDb);
         }
         catch (Exception e)

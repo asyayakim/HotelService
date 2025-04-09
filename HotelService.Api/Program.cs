@@ -15,6 +15,7 @@ builder.Services.AddScoped<CsvReaderService>();
 builder.Services.AddScoped<DbRepository>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ReservationService>();
+builder.Services.AddScoped<HotelRepository>();
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>
