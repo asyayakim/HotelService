@@ -9,6 +9,4 @@ public class HotelDto
     public string Description { get; set; }
     public string ThumbnailUrl { get; set; }
     public double LogPrice { get; set; } 
-    
-    public ICollection<ReservationDto> Reservations { get; set; }
 }

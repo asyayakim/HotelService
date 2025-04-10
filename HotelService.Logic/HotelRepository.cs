@@ -66,6 +66,7 @@ public class HotelRepository
     public async Task<List<Hotel>> AddManyHotelsAsync(List<HotelCreateDto> hotels)
     {
         var addedHotels = new List<Hotel>();
+        var addedRooms = new List<Room>();
         foreach (var hotel in hotels)
         {
             var exists = await _appDbContextdb.Hotels
@@ -82,27 +83,21 @@ public class HotelRepository
                 };
 
                 await _appDbContextdb.Hotels.AddAsync(newHotel);
+                await _appDbContextdb.SaveChangesAsync();
                 addedHotels.Add(newHotel);
                 if (hotel.Rooms != null && hotel.Rooms.Any())
                 {
-                    foreach (var room in hotel.Rooms)
+                    newHotel.Rooms = hotel.Rooms.Select(r => new Room
                     {
-                        newHotel.Rooms.Add(new Room
-                        {
-                            RoomType = room.RoomType,
-                            PricePerNight = room.PricePerNight,
-                            ThumbnailRoom = room.ThumbnailRoom,
-                            HotelId = newHotel.HotelId
-                        });
-                    }
-
+                        RoomType = r.RoomType,
+                        PricePerNight = r.PricePerNight,
+                        ThumbnailRoom = r.ThumbnailRoom
+                    }).ToList();
+                    await _appDbContextdb.Rooms.AddRangeAsync(addedRooms);
                     await _appDbContextdb.SaveChangesAsync();
                 }
             }
         }
-        if (addedHotels.Any())
-            await _appDbContextdb.SaveChangesAsync();
-
         return addedHotels;
     }
 }
