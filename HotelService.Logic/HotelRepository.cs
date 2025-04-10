@@ -100,4 +100,34 @@ public class HotelRepository
         }
         return addedHotels;
     }
+
+    public async Task<(List<HotelSendDto> hotels, int TotalCount)> GetHotelsPaginatedFromDbAsync(int pageNumber, int pageSize)
+    {
+        int skipCount = (pageNumber - 1) * pageSize;
+        int totalCount = await _appDbContextdb.Hotels.CountAsync();
+        var hotels = await _appDbContextdb.Hotels
+            .Include(h => h.Rooms)
+            .OrderBy(h => h.HotelId) 
+            .Skip(skipCount)
+            .Take(pageSize)
+            .ToListAsync();
+        var hotelDtos = hotels.Select(h => new HotelSendDto
+        {
+            HotelId = h.HotelId,
+            Name = h.Name,
+            Description = h.Description,
+            ThumbnailUrl = h.ThumbnailUrl,
+            Price = h.Price,
+            IsActive = h.IsActive,
+            Rooms = h.Rooms?.Select(r => new RoomSendDto
+            {
+                RoomId = r.RoomId,
+                RoomType = r.RoomType,
+                PricePerNight = r.PricePerNight,
+                ThumbnailRoom = r.ThumbnailRoom
+            }).ToList()
+        }).ToList();
+
+        return (hotelDtos, totalCount);
+    }
 }

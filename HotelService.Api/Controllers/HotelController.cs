@@ -23,12 +23,35 @@ public class HotelController : ControllerBase
         _service = service;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetHotels([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 4)
+    // [HttpGet]
+    // public async Task<IActionResult> GetHotels([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 4)
+    // {
+    //     try
+    //     {
+    //         var (hotels, totalCount) = await _csvReaderService.GetHotelsPaginatedAsync(pageNumber, pageSize);
+    //
+    //         var response = new
+    //         {
+    //             TotalRecords = totalCount,
+    //             PageNumber = pageNumber,
+    //             PageSize = pageSize,
+    //             TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
+    //             Hotels = hotels
+    //         };
+    //         return Ok(response);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}");
+    //         return StatusCode(500, $"An error occurred: {e.Message}");
+    //     }
+    // }
+    [HttpGet("all-hotels")]
+    public async Task<IActionResult> GetHotelsFromDbAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 4)
     {
         try
         {
-            var (hotels, totalCount) = await _csvReaderService.GetHotelsPaginatedAsync(pageNumber, pageSize);
+            var (hotels, totalCount) = await _service.GetHotelsPaginatedFromDbAsync(pageNumber, pageSize);
 
             var response = new
             {
@@ -46,23 +69,23 @@ public class HotelController : ControllerBase
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
     }
+    //  from csv
+    // [HttpGet("{id}")]
+    // public async Task<IActionResult> GetHotelById(int id)
+    // {
+    //     try
+    //     {
+    //         var hotel = await _csvReaderService.GetHotelsByIdAsync(id);
+    //         return Ok(hotel);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}");
+    //         return StatusCode(500, $"An error occurred: {e.Message}");
+    //     }
+    // }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetHotelById(int id)
-    {
-        try
-        {
-            var hotel = await _csvReaderService.GetHotelsByIdAsync(id);
-            return Ok(hotel);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}");
-            return StatusCode(500, $"An error occurred: {e.Message}");
-        }
-    }
-
-    [HttpGet("from-db{id:int}")]
+    [HttpGet("from-db/{id:int}")]
     public async Task<IActionResult> GetHotelByIdFromDb(int id)
     {
         try
