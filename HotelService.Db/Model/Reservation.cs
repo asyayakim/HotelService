@@ -9,6 +9,10 @@ public class Reservation
     public int ReservationId { get; set; }
     public DateTime ReservationDate { get; set; } = DateTime.Now;
     
+    [ForeignKey("Room")]
+    public int RoomId { get; set; }
+    public Room Room { get; set; }
+    
     [ForeignKey("Customer")]
     public int CustomerId { get; set; }
     public Customer Customer { get; set; }

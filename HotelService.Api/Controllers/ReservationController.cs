@@ -38,7 +38,7 @@ public class ReservationController : ControllerBase
     }
     [AllowAnonymous]
     [HttpDelete("reservation")]
-    public async Task<IActionResult> ReservationCancellingAsync([FromBody] CustomerDto request)
+    public async Task<IActionResult> ReservationCancellingAsync([FromBody] ReservationDto request)
     {
         try
         {

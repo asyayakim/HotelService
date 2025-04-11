@@ -19,11 +19,12 @@ public class ReservationService
 
     public async Task<bool> ReservationProcessAsync(ReservationDto request)
     {
-        var customer = await _appDbContext.Customers.FindAsync(request.UserId);
+        var customer = await _appDbContext.Customers.FindAsync(request.CustomerId);
+        
         var newReservation = new Reservation()
         {
             ReservationDate = DateTime.Today,
-            CustomerId = request.UserId,
+            CustomerId = request.CustomerId,
             Customer = customer,
             CheckInDate = request.CheckInDate,
             CheckOutDate = request.CheckOutDate,
@@ -35,9 +36,11 @@ public class ReservationService
         return true;
     }
     
-    public async Task<bool> CancelReservationAsync(CustomerDto request)
+    public async Task<bool> CancelReservationAsync(ReservationDto request)
     {
-        var reservation = await _appDbContext.Reservations.FindAsync(request.ReservationId);
+        var reservation = await _appDbContext.Reservations.FirstOrDefaultAsync(h => h.CustomerId 
+            == request.CustomerId && 
+            h.ReservationId == request.ReservationId);
         if (reservation == null)
         {
             return false;
@@ -52,23 +55,8 @@ public class ReservationService
         var reservationsByUser = _appDbContext.Reservations.Where(r => r.CustomerId == id);
         return await reservationsByUser.ToListAsync();
     }
-    public async Task<Reservation?> GetAllReservationsAsync()
+    public async Task<List<Reservation>> GetAllReservationsAsync()
     {
-        return await _appDbContext.Reservations.FirstOrDefaultAsync();
-    }
-
-    public async Task<EntityEntry<Customer>> AddNewCustomerAsync(CustomerDto customerDto)
-    {
-        var newCustomer = new Customer
-        {
-            FirstName = customerDto.FirstName,
-            LastName = customerDto.LastName,
-            PhoneNumber = customerDto.PhoneNumber,
-            DateOfBirth = customerDto.DateOfBirth,
-            UserId = customerDto.UserId,
-            ReservationId = customerDto.ReservationId
-        };
-        return await _appDbContext.Customers.AddAsync(newCustomer);
-        
+        return await _appDbContext.Reservations.ToListAsync();
     }
 }

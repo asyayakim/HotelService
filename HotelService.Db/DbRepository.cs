@@ -40,21 +40,29 @@ public class DbRepository
             .FirstOrDefaultAsync(u => u.Username == requestUsername || u.Email == requestEmail);
     }
 
-    public async Task<Hotel?> GetHotelsByIdAsync(int id)
+    public async Task<HotelSendDto?> GetHotelsByIdAsync(int id)
     {
-        var searchedHotel = await _dbContext.Hotels.FindAsync(id);
+        var searchedHotel = await _dbContext.Hotels.Include(h => h.Rooms)
+            .FirstOrDefaultAsync(h => h.HotelId == id);
         if (searchedHotel == null)
             return null;
-        var hotel = new Hotel()
+        var hotelDtos = new HotelSendDto
         {
             HotelId = searchedHotel.HotelId,
             Name = searchedHotel.Name,
             Description = searchedHotel.Description,
             ThumbnailUrl = searchedHotel.ThumbnailUrl,
             Price = searchedHotel.Price,
-            Rooms = searchedHotel.Rooms
+            IsActive = searchedHotel.IsActive,
+            Rooms = searchedHotel.Rooms?.Select(r => new RoomSendDto
+            {
+                RoomId = r.RoomId,
+                RoomType = r.RoomType,
+                PricePerNight = r.PricePerNight,
+                ThumbnailRoom = r.ThumbnailRoom
+            }).ToList()
         };
-        return hotel;
+        return hotelDtos;
     }
 
     public async Task<List<User>> GetAllUsers()
