@@ -56,4 +56,9 @@ public class DbRepository
         };
         return hotel;
     }
+
+    public async Task<List<User>> GetAllUsers()
+    {
+        return await _dbContext.Users.ToListAsync();
+    }
 }

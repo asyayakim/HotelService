@@ -2,6 +2,7 @@ using HotelService.Db;
 using HotelService.Db.DTOs;
 using HotelService.Db.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HotelService.Logic;
 
@@ -54,5 +55,20 @@ public class ReservationService
     public async Task<Reservation?> GetAllReservationsAsync()
     {
         return await _appDbContext.Reservations.FirstOrDefaultAsync();
+    }
+
+    public async Task<EntityEntry<Customer>> AddNewCustomerAsync(CustomerDto customerDto)
+    {
+        var newCustomer = new Customer
+        {
+            FirstName = customerDto.FirstName,
+            LastName = customerDto.LastName,
+            PhoneNumber = customerDto.PhoneNumber,
+            DateOfBirth = customerDto.DateOfBirth,
+            UserId = customerDto.UserId,
+            ReservationId = customerDto.ReservationId
+        };
+        return await _appDbContext.Customers.AddAsync(newCustomer);
+        
     }
 }

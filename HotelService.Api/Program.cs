@@ -20,7 +20,20 @@ builder.Services.AddScoped<HotelRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+Console.WriteLine(builder.Configuration.GetConnectionString("DefaultConnection"));
+var connString = builder.Configuration.GetConnectionString("DefaultConnection");
+try
+{
+    using (var conn = new NpgsqlConnection(connString))
+    {
+        conn.Open();
+        Console.WriteLine("Connected to PostgreSQL!");
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"An error occurred: {ex.Message}");
+}
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>

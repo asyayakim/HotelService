@@ -4,6 +4,7 @@ using HotelService.Logic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HotelService.Db.Model;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace HotelService.Api.Controllers;
 [ApiController]
@@ -76,5 +77,21 @@ public class AuthController : ControllerBase
             Console.WriteLine($"Error during login: {ex.Message}");
             return StatusCode(500, "Internal server error.");
         }
-    } 
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllUsers()
+    {
+        try
+        {
+            var allUsers = await _dbRepository.GetAllUsers();
+            return Ok(allUsers);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            throw;
+        }
+    }
+    
 }

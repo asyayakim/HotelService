@@ -7,7 +7,7 @@ public class Reservation
 {
     [Key]
     public int ReservationId { get; set; }
-    public DateTime ReservationDate { get; set; }
+    public DateTime ReservationDate { get; set; } = DateTime.Now;
     
     [ForeignKey("Customer")]
     public int CustomerId { get; set; }
