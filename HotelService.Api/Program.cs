@@ -18,6 +18,7 @@ builder.Services.AddScoped<ReservationService>();
 builder.Services.AddScoped<HotelRepository>();
 builder.Services.AddScoped<CsvReaderService>();
 builder.Services.AddScoped<CustomerService>();
+builder.Services.AddScoped<PaymentService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
