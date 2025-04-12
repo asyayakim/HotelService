@@ -17,15 +17,15 @@ public class ReservationService
         _appDbContext = appDbContext;
     }
 
-    public async Task<bool> ReservationProcessAsync(ReservationDto request)
+    public async Task<Reservation> ReservationProcessAsync(ReservationDto request)
     {
-        var customer = await _appDbContext.Customers.FindAsync(request.CustomerId);
+        var customer = await _appDbContext.Customers.FirstOrDefaultAsync(r => 
+            r.CustomerId == request.CustomerId);
         
         var newReservation = new Reservation()
         {
             ReservationDate = DateTime.Today,
             CustomerId = request.CustomerId,
-            Customer = customer,
             CheckInDate = request.CheckInDate,
             CheckOutDate = request.CheckOutDate,
             TotalPrice = request.TotalPrice,
@@ -33,7 +33,7 @@ public class ReservationService
         };
         await _appDbContext.Reservations.AddAsync(newReservation);
         await _appDbContext.SaveChangesAsync();
-        return true;
+        return newReservation;
     }
     
     public async Task<bool> CancelReservationAsync(ReservationDto request)

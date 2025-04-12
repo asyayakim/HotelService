@@ -22,18 +22,18 @@ public class CustomerService
                 c.UserId == customerDto.UserId);
         var updatedCustomer = new Customer
         {
-            FirstName = customerDto.FirstName,
-            LastName = customerDto.LastName,
-            PhoneNumber = customerDto.PhoneNumber,
-            DateOfBirth = customerDto.DateOfBirth
-
+            FirstName = customerToChange.FirstName,
+            LastName = customerToChange.LastName,
+            PhoneNumber = customerToChange.PhoneNumber,
+            DateOfBirth = customerToChange.DateOfBirth,
+            UserId = customerDto.UserId,
         };
         await _context.Customers.AddAsync(updatedCustomer);
         await _context.SaveChangesAsync();
         return updatedCustomer;
     }
     public async Task<Customer> AddNewCustomerAsync(CustomerDto customerDto)
-    {
+    { 
         var newCustomer = new Customer
         {
             FirstName = customerDto.FirstName,
@@ -41,7 +41,6 @@ public class CustomerService
             PhoneNumber = customerDto.PhoneNumber,
             DateOfBirth = customerDto.DateOfBirth,
             UserId = customerDto.UserId
-
         };
          await _context.Customers.AddAsync(newCustomer);
          await _context.SaveChangesAsync();

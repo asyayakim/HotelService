@@ -19,7 +19,7 @@ public class ReservationController : ControllerBase
     
     //temporally, testing only
     [AllowAnonymous]
-    [HttpPost("reservation")]
+    [HttpPost]
     public async Task<IActionResult> ReservationAsync([FromBody] ReservationDto request)
     {
         try
@@ -29,7 +29,7 @@ public class ReservationController : ControllerBase
             {
                 return BadRequest();
             }
-            return Ok();
+            return Ok(reservation);
         }
         catch (InvalidOperationException ex)
         {

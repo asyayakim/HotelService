@@ -13,10 +13,8 @@ public class Customer
   
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public string PhoneNumber { get; set; }
-    public DateTime? DateOfBirth { get; set; }
-    [ForeignKey("Reservation")]
-    public int ReservationId { get; set; }
+    public int PhoneNumber { get; set; }
+    public DateOnly? DateOfBirth { get; set; } 
     
     public ICollection<Reservation> Reservations { get; set; }
     public ICollection<PaymentMethod> PaymentMethods { get; set; }

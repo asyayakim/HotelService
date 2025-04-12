@@ -17,7 +17,7 @@ public class CustomerController : ControllerBase
     }
 
     [HttpPost]
-     public async Task<ActionResult<CustomerDto>> Login([FromBody] CustomerDto customerDto)
+     public async Task<ActionResult<CustomerDto>> AddCustomerAsync([FromBody] CustomerDto customerDto)
      {
          try
          {
