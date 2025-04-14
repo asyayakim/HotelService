@@ -19,15 +19,13 @@ public class ReservationService
 
     public async Task<Reservation> ReservationProcessAsync(ReservationDto request)
     {
-        // var customer = await _appDbContext.Customers.FirstOrDefaultAsync(r => 
-        //     r.CustomerId == request.CustomerId);
         var newReservation = new Reservation()
         {
             CustomerId = request.CustomerId,
             CheckInDate = request.CheckInDate,
             CheckOutDate = request.CheckOutDate,
             TotalPrice = request.TotalPrice,
-            Status = "pending",
+            Status = "paid",
             RoomId = request.RoomId,
             PaymentMethodId = request.PaymentMethodId
         };

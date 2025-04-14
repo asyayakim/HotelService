@@ -22,12 +22,12 @@ public class PaymentController : ControllerBase
     {
         try
         {
-            var reservation = await _paymentService.PaymentProcessAsync(request);
-            if (reservation == null)
+            var payment = await _paymentService.PaymentProcessAsync(request);
+            if (payment == null)
             {
                 return BadRequest();
             }
-            return Ok(reservation);
+            return Ok(new { PaymentMethodId = payment.PaymentMethodId });
         }
         catch (InvalidOperationException ex)
         {

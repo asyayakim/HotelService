@@ -19,8 +19,8 @@ public class ReservationController : ControllerBase
     
     //temporally, testing only
     [AllowAnonymous]
-    [HttpPost]
-    public async Task<IActionResult> ReservationAsync([FromBody] ReservationDto request)
+    [HttpPost("hotel/{id:int}")]
+    public async Task<IActionResult> ReservationAsync(int id,[FromBody] ReservationDto request)
     {
         try
         {
