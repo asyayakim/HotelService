@@ -14,6 +14,7 @@ public class Customer
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public int PhoneNumber { get; set; }
+    [Column(TypeName = "date")]
     public DateOnly? DateOfBirth { get; set; } 
     
     public ICollection<Reservation> Reservations { get; set; }

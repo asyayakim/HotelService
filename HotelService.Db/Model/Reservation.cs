@@ -21,8 +21,10 @@ public class Reservation
     [JsonIgnore]
     public Customer Customer { get; set; }
     [Required]
+    [Column(TypeName = "date")]
     public DateOnly CheckInDate { get; set; }
     [Required]
+    [Column(TypeName = "date")]
     public DateOnly CheckOutDate { get; set; }
     public decimal TotalPrice { get; set; }
     public string Status { get; set; }

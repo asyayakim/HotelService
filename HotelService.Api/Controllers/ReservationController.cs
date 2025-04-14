@@ -54,12 +54,12 @@ public class ReservationController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-    [HttpGet("reservations-by-user{id:int}")]
-    public async Task<IActionResult> GetHotelById(int id)
+    [HttpGet("reservations-by-user{roomId:int}")]
+    public async Task<IActionResult> GetHotelById(int roomId)
     {
         try
         {
-            var reservations = await _reservationService.GetAllReservationsByIdAsync(id);
+            var reservations = await _reservationService.GetAllReservationsByIdAsync(roomId);
             return Ok(reservations);
         }
         catch (Exception e)
@@ -75,6 +75,21 @@ public class ReservationController : ControllerBase
         try
         {
             var reservations = await _reservationService.GetAllReservationsAsync();
+            return Ok(reservations);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}"); 
+            return StatusCode(500, $"An error occurred: {e.Message}");
+        }
+    }
+    [AllowAnonymous]
+    [HttpGet("available-date/{id:int}")]
+    public async Task<IActionResult> GetHotelByRoomId(int id)
+    {
+        try
+        {
+            var reservations = await _reservationService.GetAllReservationsByRoomIdAsync(id);
             return Ok(reservations);
         }
         catch (Exception e)

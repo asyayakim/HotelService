@@ -57,4 +57,20 @@ public class ReservationService
     {
         return await _appDbContext.Reservations.ToListAsync();
     }
+    public async Task <List<ReservationDto>> GetAllReservationsByRoomIdAsync(int id)
+    {
+        var reservationToReturn = new List<ReservationDto>();
+        var reservationsByRoom = _appDbContext.Reservations.Where(r
+            => r.RoomId == id).ToList();
+        foreach (var reservation in reservationsByRoom)
+        {
+            var reservationDate = new ReservationDto
+            {
+                CheckInDate = reservation.CheckInDate,
+                CheckOutDate = reservation.CheckOutDate,
+            };
+            reservationToReturn.Add(reservationDate);
+        }
+        return reservationToReturn;
+    }
 }
