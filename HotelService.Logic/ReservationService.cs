@@ -26,6 +26,7 @@ public class ReservationService
             CheckOutDate = request.CheckOutDate,
             TotalPrice = request.TotalPrice,
             Status = "paid",
+            AdultsCount = request.AdultsCount,
             RoomId = request.RoomId,
             PaymentMethodId = request.PaymentMethodId
         };

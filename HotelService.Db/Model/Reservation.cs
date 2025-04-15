@@ -31,5 +31,5 @@ public class Reservation
     [ForeignKey("PaymentMethod")] 
     public int? PaymentMethodId { get; set; }
     public PaymentMethod PaymentMethod { get; set; }
-    public int AdultsCount { get; set; } = 2;
+    public int AdultsCount { get; set; }
 }
