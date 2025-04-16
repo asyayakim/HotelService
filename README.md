@@ -1,8 +1,6 @@
-# Hotel Service - Hotel Management System 🏨
+# Hotel Service - Hotel Management System 
 
 A full-stack hotel management system for booking reservations, processing payments, and managing user preferences.
-
-![Demo](https://via.placeholder.com/800x400.png?text=Hotel+Service+Demo) *Replace with actual screenshots*
 
 ## Features 
 - **User Authentication** 
@@ -26,7 +24,7 @@ A full-stack hotel management system for booking reservations, processing paymen
 React • TypeScript • React Router • Axios • SweetAlert2
 
 
-## Getting Started 🚀
+## Getting Started 
 
 ### Prerequisites
 - [.NET 9 SDK](https://dotnet.microsoft.com/download)
