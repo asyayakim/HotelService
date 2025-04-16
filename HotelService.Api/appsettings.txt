@@ -1,0 +1,18 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=<db_name>;Username=postgres;Password=your_password"
+  },
+  "JwtSettings": {
+    "ValidIssuer": "hotel-service",
+    "ValidAudience": "hotel-service-client",
+    "Secret": "your-secret-key",
+    "RequireRole": true
+  }
+}

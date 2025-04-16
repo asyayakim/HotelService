@@ -38,10 +38,7 @@ public class AuthController : ControllerBase
                 (request.Username, hashedPassword,
                     request.Email, role);
 
-            return Ok(new
-            {
-                Message = "User registered successfully.",
-            });
+            return Ok(newUser);
         }
         catch (InvalidOperationException ex)
         {

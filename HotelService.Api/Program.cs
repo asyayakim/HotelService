@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text;
 using HotelService.Db;
+using HotelService.Db.Model;
 using HotelService.Logic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -19,6 +20,9 @@ builder.Services.AddScoped<HotelRepository>();
 builder.Services.AddScoped<CsvReaderService>();
 builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<PaymentService>();
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("JwtSettings"));
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
