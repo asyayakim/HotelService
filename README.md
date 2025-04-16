@@ -16,7 +16,7 @@ A full-stack hotel management system for booking reservations, processing paymen
 - **Admin Dashboard** 
   Manage hotels, rooms, view all reservations (Coming Soon)
 
-## Tech Stack 🛠️
+## Tech Stack 
 **Backend**  
 .NET Core • Entity Framework Core • PostgreSQL • JWT • Swagger
 
