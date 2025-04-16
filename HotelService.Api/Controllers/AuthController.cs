@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
                 (request.Username, hashedPassword,
                     request.Email, role);
 
-            return Ok(newUser);
+            return Ok(newUser.UserId);
         }
         catch (InvalidOperationException ex)
         {

@@ -39,7 +39,7 @@ public class CustomerService
             FirstName = customerDto.FirstName,
             LastName = customerDto.LastName,
             PhoneNumber = customerDto.PhoneNumber,
-            DateOfBirth = customerDto.DateOfBirth,
+            DateOfBirth = customerDto.DateOfBirth?.ToDateTime(TimeOnly.MinValue),
             UserId = customerDto.UserId
         };
          await _context.Customers.AddAsync(newCustomer);

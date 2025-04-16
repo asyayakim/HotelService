@@ -17,11 +17,11 @@ public class CustomerController : ControllerBase
     }
 
     [HttpPost]
-     public async Task<ActionResult<CustomerDto>> AddCustomerAsync([FromBody] CustomerDto customerDto)
+     public async Task<IActionResult> AddCustomerAsync([FromBody] CustomerDto customerDto)
      {
          try
          {
-             var newCustomer = _customerService.AddNewCustomerAsync(customerDto);
+             var newCustomer = await _customerService.AddNewCustomerAsync(customerDto);
              return Ok(newCustomer);
          }
          catch (Exception e)
@@ -36,7 +36,7 @@ public class CustomerController : ControllerBase
     {
         try
         {
-            var updatedCustomer = _customerService.ChangeData(customerDto);
+            var updatedCustomer = await _customerService.ChangeData(customerDto);
             return Ok(updatedCustomer);
 
         }
