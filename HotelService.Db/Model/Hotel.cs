@@ -15,6 +15,7 @@ public class Hotel
     public string ThumbnailUrl { get; set; } // add list of images
     public double Price { get; set; }
     public bool IsActive { get; set; } = true;
-
+    [JsonIgnore]
+    public ICollection<FavoriteHotels> FavoriteHotels { get; set; } = new List<FavoriteHotels>();
     public ICollection<Room>? Rooms { get; set; } = new List<Room>();
 }

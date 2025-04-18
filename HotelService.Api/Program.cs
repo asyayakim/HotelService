@@ -11,7 +11,6 @@ using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<CsvReaderService>();
 builder.Services.AddScoped<DbRepository>();

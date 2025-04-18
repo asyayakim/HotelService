@@ -22,5 +22,6 @@ public class Customer
     public ICollection<Reservation> Reservations { get; set; }
     [JsonIgnore]
     public ICollection<PaymentMethod> PaymentMethods { get; set; }
-    
+    [JsonIgnore]
+    public ICollection<FavoriteHotels> FavoriteHotels { get; set; } = new List<FavoriteHotels>();
 }

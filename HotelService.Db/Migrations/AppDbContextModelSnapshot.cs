@@ -55,6 +55,24 @@ namespace HotelService.Db.Migrations
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("HotelService.Db.Model.FavoriteHotels", b =>
+                {
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("HotelId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("CustomerId", "HotelId");
+
+                    b.HasIndex("HotelId");
+
+                    b.ToTable("FavoriteHotels");
+                });
+
             modelBuilder.Entity("HotelService.Db.Model.Hotel", b =>
                 {
                     b.Property<int>("HotelId")
@@ -242,6 +260,25 @@ namespace HotelService.Db.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("HotelService.Db.Model.FavoriteHotels", b =>
+                {
+                    b.HasOne("HotelService.Db.Model.Customer", "Customer")
+                        .WithMany("FavoriteHotels")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HotelService.Db.Model.Hotel", "Hotel")
+                        .WithMany("FavoriteHotels")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Hotel");
+                });
+
             modelBuilder.Entity("HotelService.Db.Model.PaymentMethod", b =>
                 {
                     b.HasOne("HotelService.Db.Model.Customer", "Customer")
@@ -291,6 +328,8 @@ namespace HotelService.Db.Migrations
 
             modelBuilder.Entity("HotelService.Db.Model.Customer", b =>
                 {
+                    b.Navigation("FavoriteHotels");
+
                     b.Navigation("PaymentMethods");
 
                     b.Navigation("Reservations");
@@ -298,6 +337,8 @@ namespace HotelService.Db.Migrations
 
             modelBuilder.Entity("HotelService.Db.Model.Hotel", b =>
                 {
+                    b.Navigation("FavoriteHotels");
+
                     b.Navigation("Rooms");
                 });
 

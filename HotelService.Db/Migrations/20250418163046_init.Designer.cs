@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HotelService.Db.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250409154752_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250418163046_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,7 @@ namespace HotelService.Db.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CustomerId"));
 
                     b.Property<DateTime?>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("date");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -56,6 +56,24 @@ namespace HotelService.Db.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("HotelService.Db.Model.FavoriteHotels", b =>
+                {
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("HotelId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("CustomerId", "HotelId");
+
+                    b.HasIndex("HotelId");
+
+                    b.ToTable("FavoriteHotels");
                 });
 
             modelBuilder.Entity("HotelService.Db.Model.Hotel", b =>
@@ -138,22 +156,22 @@ namespace HotelService.Db.Migrations
                     b.Property<int>("AdultsCount")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CheckInDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("CheckInDate")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("CheckOutDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("CheckOutDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PaymentMethodId")
+                    b.Property<int?>("PaymentMethodId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("ReservationDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("RoomId")
+                    b.Property<int>("RoomId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Status")
@@ -245,6 +263,25 @@ namespace HotelService.Db.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("HotelService.Db.Model.FavoriteHotels", b =>
+                {
+                    b.HasOne("HotelService.Db.Model.Customer", "Customer")
+                        .WithMany("FavoriteHotels")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HotelService.Db.Model.Hotel", "Hotel")
+                        .WithMany("FavoriteHotels")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Hotel");
+                });
+
             modelBuilder.Entity("HotelService.Db.Model.PaymentMethod", b =>
                 {
                     b.HasOne("HotelService.Db.Model.Customer", "Customer")
@@ -265,18 +302,20 @@ namespace HotelService.Db.Migrations
                         .IsRequired();
 
                     b.HasOne("HotelService.Db.Model.PaymentMethod", "PaymentMethod")
+                        .WithMany()
+                        .HasForeignKey("PaymentMethodId");
+
+                    b.HasOne("HotelService.Db.Model.Room", "Room")
                         .WithMany("Reservations")
-                        .HasForeignKey("PaymentMethodId")
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("HotelService.Db.Model.Room", null)
-                        .WithMany("Reservations")
-                        .HasForeignKey("RoomId");
 
                     b.Navigation("Customer");
 
                     b.Navigation("PaymentMethod");
+
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("HotelService.Db.Model.Room", b =>
@@ -292,6 +331,8 @@ namespace HotelService.Db.Migrations
 
             modelBuilder.Entity("HotelService.Db.Model.Customer", b =>
                 {
+                    b.Navigation("FavoriteHotels");
+
                     b.Navigation("PaymentMethods");
 
                     b.Navigation("Reservations");
@@ -299,12 +340,9 @@ namespace HotelService.Db.Migrations
 
             modelBuilder.Entity("HotelService.Db.Model.Hotel", b =>
                 {
-                    b.Navigation("Rooms");
-                });
+                    b.Navigation("FavoriteHotels");
 
-            modelBuilder.Entity("HotelService.Db.Model.PaymentMethod", b =>
-                {
-                    b.Navigation("Reservations");
+                    b.Navigation("Rooms");
                 });
 
             modelBuilder.Entity("HotelService.Db.Model.Room", b =>

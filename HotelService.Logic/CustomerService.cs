@@ -46,4 +46,18 @@ public class CustomerService
          await _context.SaveChangesAsync();
          return newCustomer;
     }
+
+    public async Task<FavoriteHotels> AddToFavoritesAsync( FavoriteDto favorite)
+    {
+        var findCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.UserId == favorite.UserId);
+        var newFavorite = new FavoriteHotels
+        {
+            HotelId = favorite.HotelId,
+            CustomerId = findCustomer.CustomerId,
+            DateAdded = DateTime.UtcNow,
+        };
+        _context.FavoriteHotels.Add(newFavorite);
+        await _context.SaveChangesAsync();
+        return newFavorite;
+    }
 }

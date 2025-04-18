@@ -16,12 +16,22 @@ public class AppDbContext : DbContext
     public DbSet<Reservation> Reservations { get; set; }
     public DbSet<PaymentMethod> PaymentMethods { get; set; }
     public DbSet<Room> Rooms { get; set; }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public DbSet<FavoriteHotels> FavoriteHotels { get; set; }
+   
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseNpgsql("DefaultConnection",
-                b => b.MigrationsAssembly("HotelService.Db")); 
-        }
+        modelBuilder.Entity<FavoriteHotels>()
+            .HasKey(f => new { f.CustomerId, f.HotelId });
+
+        modelBuilder.Entity<FavoriteHotels>()
+            .HasOne(f => f.Customer)
+            .WithMany(c => c.FavoriteHotels)
+            .HasForeignKey(f => f.CustomerId);
+
+        modelBuilder.Entity<FavoriteHotels>()
+            .HasOne(f => f.Hotel)
+            .WithMany(h => h.FavoriteHotels)
+            .HasForeignKey(f => f.HotelId);
     }
+
 }
