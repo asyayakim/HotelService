@@ -15,5 +15,8 @@ public class FavoriteHotels
     [JsonIgnore]
     public Hotel Hotel { get; set; }
 
+    public bool IsFavorite { get; set; } = true;
+
     public DateTime DateAdded { get; set; } = DateTime.UtcNow;
+    public DateTime? DateRemoved { get; set; } = null;
 }
