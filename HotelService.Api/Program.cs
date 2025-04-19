@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using HotelService.Db;
 using HotelService.Db.Model;
 using HotelService.Logic;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -28,23 +29,26 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JwtSettings:ValidIssuer"],
+            ValidAudience = builder.Configuration["JwtSettings:ValidAudience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]))
+        };
+    });
 
+builder.Services.AddAuthorization();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-Console.WriteLine(builder.Configuration.GetConnectionString("DefaultConnection"));
-var connString = builder.Configuration.GetConnectionString("DefaultConnection");
-try
-{
-    using (var conn = new NpgsqlConnection(connString))
-    {
-        conn.Open();
-        Console.WriteLine("Connected to PostgreSQL!");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"An error occurred: {ex.Message}");
-}
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>

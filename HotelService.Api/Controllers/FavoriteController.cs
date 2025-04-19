@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelService.Api.Controllers;
 [ApiController]
-// [Authorize]
+[Authorize]
 [Route("api/[controller]")]
 public class FavoriteController : ControllerBase
 {
@@ -22,6 +22,8 @@ public class FavoriteController : ControllerBase
     {
         try
         {
+            var userIdData = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdData)) return Unauthorized();
             await _customerService.AddToFavoritesAsync(favorite);
              return Ok("Hotel added to favorites");
         }
