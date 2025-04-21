@@ -91,7 +91,9 @@ public class CustomerService
         var usersFav = await _context.FavoriteHotels.Where(h => h.CustomerId
                                                                 == customerToFind.CustomerId)
             .ToListAsync();
-        return usersFav;
+        var userActualFav = await _context.FavoriteHotels.Where(
+            f => f.IsFavorite == true).ToListAsync();
+        return userActualFav;
     }
 
     public async Task<List<FavoriteHotels>> GetAllFavoritesData()

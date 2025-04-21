@@ -16,7 +16,6 @@ public class FavoriteController : ControllerBase
     {
         _customerService = customerService;
     }
-
     [HttpPost]
     public async Task<IActionResult> AddToFavorites([FromBody] FavoriteDto favorite)
     {
