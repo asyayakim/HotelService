@@ -17,7 +17,7 @@ public class Customer
     public string LastName { get; set; }
     public string PhoneNumber { get; set; }
     [Column(TypeName = "date")]
-    public DateTime? DateOfBirth { get; set; } 
+    public DateOnly? DateOfBirth { get; set; } 
     [JsonIgnore]
     public ICollection<Reservation> Reservations { get; set; }
     [JsonIgnore]

@@ -16,22 +16,36 @@ public class CustomerService
         _context = context;
     }
 
-    public async Task<Customer?> ChangeData(CustomerDto customerDto)
+    public async Task<IActionResult?> ChangeData(CustomerDto customerDto)
     {
         var customerToChange =
             await _context.Customers.FirstOrDefaultAsync(c =>
                 c.UserId == customerDto.UserId);
-        var updatedCustomer = new Customer
+        
+        var userToChange = await _context.Users.FirstOrDefaultAsync(c
+            =>c.UserId == customerDto.UserId);
+        if (!string.IsNullOrEmpty(customerDto.FirstName))
+                customerToChange.FirstName = customerDto.FirstName;
+        if (!string.IsNullOrEmpty(customerDto.LastName))
+            customerToChange.LastName = customerDto.LastName;
+        if(!string.IsNullOrEmpty(customerDto.PhoneNumber))
+            customerToChange.PhoneNumber = customerDto.PhoneNumber;
+        if(!string.IsNullOrEmpty(customerDto.Email))
+            userToChange.Email = customerDto.Email;
+        if (customerDto.DateOfBirth.HasValue)
         {
-            FirstName = customerToChange.FirstName,
-            LastName = customerToChange.LastName,
-            PhoneNumber = customerToChange.PhoneNumber,
-            DateOfBirth = customerToChange.DateOfBirth,
-            UserId = customerDto.UserId,
-        };
-        await _context.Customers.AddAsync(updatedCustomer);
+            customerToChange.DateOfBirth = customerDto.DateOfBirth.Value;
+        }
+        if(!string.IsNullOrEmpty(userToChange.Username))
+            userToChange.Username = userToChange.Username;
+        if(!string.IsNullOrEmpty(customerDto.Password))
+        {
+            string hashedPassword;
+            hashedPassword = BCrypt.Net.BCrypt.HashPassword( customerDto.Password);
+            userToChange.PasswordHash = hashedPassword;
+        }
         await _context.SaveChangesAsync();
-        return updatedCustomer;
+        return null;
     }
 
     public async Task<Customer> AddNewCustomerAsync(CustomerDto customerDto)
@@ -41,7 +55,7 @@ public class CustomerService
             FirstName = customerDto.FirstName,
             LastName = customerDto.LastName,
             PhoneNumber = customerDto.PhoneNumber,
-            DateOfBirth = customerDto.DateOfBirth?.ToDateTime(TimeOnly.MinValue),
+            DateOfBirth = customerDto.DateOfBirth,
             UserId = customerDto.UserId
         };
         await _context.Customers.AddAsync(newCustomer);

@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using HotelService.Db.DTOs;
 using HotelService.Logic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelService.Api.Controllers;
@@ -30,12 +32,14 @@ public class CustomerController : ControllerBase
              throw new Exception(e.Message);
          }
      }
-
+    [Authorize]
     [HttpPatch("changeData")]
     public async Task<ActionResult<CustomerDto>> ChangeData([FromBody] CustomerDto customerDto)
     {
         try
         {
+            var userIdData = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdData)) return Unauthorized();
             var updatedCustomer = await _customerService.ChangeData(customerDto);
             return Ok(updatedCustomer);
 
