@@ -16,7 +16,7 @@ namespace HotelService.Db
                 .Build();
 
             var connectionString = config.GetConnectionString("DefaultConnection")
-                                   ?? "Host=localhost;Database=hotel_users;Username=postgres;Password=your_password"; 
+                                   ?? "Host=localhost;Database=hotel_users;Username=postgres;Password=12345678"; 
 
             optionsBuilder.UseNpgsql(connectionString);
 

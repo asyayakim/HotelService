@@ -17,8 +17,6 @@ public class ReservationController : ControllerBase
         _reservationService = reservationService;
     }
     
-    //temporally, testing only
-    [AllowAnonymous]
     [HttpPost("hotel/{id:int}")]
     public async Task<IActionResult> ReservationAsync(int id,[FromBody] ReservationDto request)
     {
@@ -68,7 +66,20 @@ public class ReservationController : ControllerBase
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
     }
-   
+    [HttpGet("reservations-by-userId{userId:int}")]
+    public async Task<IActionResult> GetAllReservationsByUser( int userId)
+    {
+        try
+        {
+            var reservations = await _reservationService.GetAllReservationsByUserAsync(userId);
+            return Ok(reservations);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}"); 
+            return StatusCode(500, $"An error occurred: {e.Message}");
+        }
+    }
     [HttpGet("reservations")]
     public async Task<IActionResult> GetAllReservations()
     {

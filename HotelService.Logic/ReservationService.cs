@@ -2,7 +2,6 @@ using HotelService.Db;
 using HotelService.Db.DTOs;
 using HotelService.Db.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HotelService.Logic;
 
@@ -73,5 +72,13 @@ public class ReservationService
             reservationToReturn.Add(reservationDate);
         }
         return reservationToReturn;
+    }
+
+    public async Task<List<Reservation>> GetAllReservationsByUserAsync( int userId)
+    {
+       var findCustomer = _appDbContext.Customers.FirstOrDefault(c => c.UserId == userId);
+      var reservations = await _appDbContext.Reservations.Where(r
+          => r.CustomerId == findCustomer!.CustomerId).ToListAsync();
+      return reservations;
     }
 }
