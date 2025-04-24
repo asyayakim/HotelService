@@ -14,11 +14,13 @@ public class ReviewService
         _context = context;
     }
 
-    public async Task<Review> PostReviewAsync(ReviewDto request, ReservationDto reservationDto)
+    public async Task<Review> PostReviewAsync(ReviewDto request)
     {
         var customerId = await _context.Customers.FirstOrDefaultAsync(c => c.UserId == request.UserId);
-        var targetReservation = await _context.Reservations
-            .FirstOrDefaultAsync(r => r.ReservationId == reservationDto.ReservationId);
+        var targetReservation = await _context.Reservations.
+            Include(r => r.Room)
+            .ThenInclude(r => r.HotelId)
+            .FirstOrDefaultAsync(r => r.ReservationId == request.ReservationId);
         if (targetReservation == null)
             throw new Exception("Reservation not found");
         if (customerId == null)
@@ -26,14 +28,14 @@ public class ReviewService
         if (targetReservation.Status != "completed")
             throw new Exception("Status not completed");
         var existingReview =
-            await _context.Reviews.FirstOrDefaultAsync(r => r.ReservationId == reservationDto.ReservationId);
+            await _context.Reviews.FirstOrDefaultAsync(r => r.ReservationId == request.ReservationId);
         if (existingReview != null)
             throw new Exception("Review already exists");
 
         var review = new Review
         {
             CustomerId = customerId.CustomerId,
-            HotelId = request.HotelId,
+            HotelId = targetReservation.Room.HotelId,
             ReservationId = targetReservation.ReservationId,
             Rating = request.Rating,
             Comment = request.Comment,

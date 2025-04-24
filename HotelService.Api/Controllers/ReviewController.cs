@@ -18,11 +18,11 @@ public class ReviewController : ControllerBase
 
 
     [HttpPost]
-    public async Task<IActionResult> ReservationAsync([FromBody] ReviewDto request, ReservationDto reservationDto)
+    public async Task<IActionResult> ReservationAsync([FromBody] ReviewDto request)
     {
         try
         {
-            var review = await _reviewService.PostReviewAsync(request, reservationDto);
+            var review = await _reviewService.PostReviewAsync(request);
             if (review == null)
             {
                 return BadRequest();
