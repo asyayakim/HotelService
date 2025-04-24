@@ -17,7 +17,7 @@ public class AppDbContext : DbContext
     public DbSet<PaymentMethod> PaymentMethods { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<FavoriteHotels> FavoriteHotels { get; set; }
-   
+   public DbSet<Review> Reviews { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<FavoriteHotels>()

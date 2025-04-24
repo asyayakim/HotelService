@@ -79,6 +79,7 @@ public class ReservationService
        var findCustomer = _appDbContext.Customers.FirstOrDefault(c => c.UserId == userId);
       var reservations = await _appDbContext.Reservations.Where(r
           => r.CustomerId == findCustomer!.CustomerId).ToListAsync();
+      
       return reservations;
     }
 }

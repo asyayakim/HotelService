@@ -15,6 +15,7 @@ public class Customer
   
     public string FirstName { get; set; }
     public string LastName { get; set; }
+    public int LoyaltyPoints { get; set; } = 0;
     public string PhoneNumber { get; set; }
     [Column(TypeName = "date")]
     public DateOnly? DateOfBirth { get; set; } 
@@ -22,6 +23,8 @@ public class Customer
     public ICollection<Reservation> Reservations { get; set; }
     [JsonIgnore]
     public ICollection<PaymentMethod> PaymentMethods { get; set; }
+    [JsonIgnore]
+    public ICollection<Review> Reviews { get; set; }
     [JsonIgnore]
     public ICollection<FavoriteHotels> FavoriteHotels { get; set; } = new List<FavoriteHotels>();
 }
