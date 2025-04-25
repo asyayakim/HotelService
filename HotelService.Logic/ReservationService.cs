@@ -51,6 +51,7 @@ public class ReservationService
     public async Task<List<Reservation>> GetAllReservationsByIdAsync(int id)
     {
         var reservationsByUser = _appDbContext.Reservations.Where(r => r.CustomerId == id);
+        
         return await reservationsByUser.ToListAsync();
     }
     public async Task<List<Reservation>> GetAllReservationsAsync()
@@ -62,7 +63,8 @@ public class ReservationService
         var reservationToReturn = new List<ReservationDto>();
         var reservationsByRoom = _appDbContext.Reservations.Where(r
             => r.RoomId == id).ToList();
-        foreach (var reservation in reservationsByRoom)
+        var activeReservations = reservationsByRoom.Where(r => r.Status == "active");
+        foreach (var reservation in activeReservations)
         {
             var reservationDate = new ReservationDto
             {

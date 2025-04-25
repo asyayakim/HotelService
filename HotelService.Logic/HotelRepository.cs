@@ -18,7 +18,7 @@ public class HotelRepository
     {
         var existingHotel = await _appDbContextdb.Hotels
             .FirstOrDefaultAsync(h => h.Name == hotel.Name);
-    
+
         if (existingHotel != null)
         {
             return null;
@@ -31,6 +31,10 @@ public class HotelRepository
             ThumbnailUrl = hotel.ThumbnailUrl,
             Price = hotel.Price,
             IsActive = hotel.IsActive,
+            Address = hotel.Address,
+            City = hotel.City,
+            Country = hotel.Country,
+            PostalCode = hotel.PostalCode
         };
         await _appDbContextdb.Hotels.AddAsync(newHotel);
         await _appDbContextdb.SaveChangesAsync();
@@ -53,7 +57,7 @@ public class HotelRepository
 
     public async Task<Room?> AddRoomsAsync(Room room)
     {
-        var hotel =  await _appDbContextdb.Hotels.FirstOrDefaultAsync(h => h.HotelId == room.HotelId);
+        var hotel = await _appDbContextdb.Hotels.FirstOrDefaultAsync(h => h.HotelId == room.HotelId);
         if (hotel == null)
             return null;
 
@@ -79,7 +83,11 @@ public class HotelRepository
                     Description = hotel.Description,
                     ThumbnailUrl = hotel.ThumbnailUrl,
                     Price = hotel.Price,
-                    IsActive = hotel.IsActive
+                    IsActive = hotel.IsActive,
+                    Address = hotel.Address,
+                    City = hotel.City,
+                    Country = hotel.Country,
+                    PostalCode = hotel.PostalCode
                 };
 
                 await _appDbContextdb.Hotels.AddAsync(newHotel);
@@ -98,16 +106,18 @@ public class HotelRepository
                 }
             }
         }
+
         return addedHotels;
     }
 
-    public async Task<(List<HotelSendDto> hotels, int TotalCount)> GetHotelsPaginatedFromDbAsync(int pageNumber, int pageSize)
+    public async Task<(List<HotelSendDto> hotels, int TotalCount)> GetHotelsPaginatedFromDbAsync(int pageNumber,
+        int pageSize)
     {
         int skipCount = (pageNumber - 1) * pageSize;
         int totalCount = await _appDbContextdb.Hotels.CountAsync();
         var hotels = await _appDbContextdb.Hotels
             .Include(h => h.Rooms)
-            .OrderBy(h => h.HotelId) 
+            .OrderBy(h => h.HotelId)
             .Skip(skipCount)
             .Take(pageSize)
             .ToListAsync();
@@ -119,6 +129,10 @@ public class HotelRepository
             ThumbnailUrl = h.ThumbnailUrl,
             Price = h.Price,
             IsActive = h.IsActive,
+            Address = h.Address,
+            City = h.City,
+            Country = h.Country,
+            PostalCode = h.PostalCode,
             Rooms = h.Rooms?.Select(r => new RoomSendDto
             {
                 RoomId = r.RoomId,

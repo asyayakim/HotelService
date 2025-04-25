@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HotelService.Db.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250424163840_AddReservationIdToReview")]
-    partial class AddReservationIdToReview
+    [Migration("20250425153346_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
