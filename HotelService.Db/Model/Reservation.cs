@@ -14,6 +14,7 @@ public class Reservation
     
     [ForeignKey("Room")]
     public int RoomId { get; set; }
+    [JsonIgnore] 
     public Room Room { get; set; }
     
     [ForeignKey("Customer")]
@@ -30,6 +31,7 @@ public class Reservation
     public string Status { get; set; }
     [ForeignKey("PaymentMethod")] 
     public int? PaymentMethodId { get; set; }
+    [JsonIgnore]
     public PaymentMethod PaymentMethod { get; set; }
     public int AdultsCount { get; set; }
 }

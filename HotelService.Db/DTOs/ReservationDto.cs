@@ -15,6 +15,6 @@ public class ReservationDto
     public decimal TotalPrice { get; set; }
     public int PaymentMethodId { get; set; }
     public int AdultsCount { get; set; }
-    public string ThumbnailUrl { get; set; }
+    public string? ThumbnailUrl { get; set; }
     
 }
