@@ -53,6 +53,10 @@ public class DbRepository
             Description = searchedHotel.Description,
             ThumbnailUrl = searchedHotel.ThumbnailUrl,
             Price = searchedHotel.Price,
+            Address = searchedHotel.Address,
+            City = searchedHotel.City,
+            Country = searchedHotel.Country,
+            PostalCode = searchedHotel.PostalCode,
             IsActive = searchedHotel.IsActive,
             Rooms = searchedHotel.Rooms?.Select(r => new RoomSendDto
             {

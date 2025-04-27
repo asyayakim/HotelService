@@ -63,7 +63,7 @@ public class ReservationService
         var reservationToReturn = new List<ReservationDto>();
         var reservationsByRoom = _appDbContext.Reservations.Where(r
             => r.RoomId == id).ToList();
-        var activeReservations = reservationsByRoom.Where(r => r.Status == "active");
+        var activeReservations = reservationsByRoom.Where(r => r.Status == "active" || r.Status == "paid");
         foreach (var reservation in activeReservations)
         {
             var reservationDate = new ReservationDto
@@ -78,8 +78,8 @@ public class ReservationService
 
     public async Task<List<Reservation>> GetAllReservationsByUserAsync( int userId)
     {
-       var findCustomer = _appDbContext.Customers.FirstOrDefault(c => c.UserId == userId);
-      var reservations = await _appDbContext.Reservations.Where(r
+       var findCustomer = await _appDbContext.Customers.FirstOrDefaultAsync(c => c.UserId == userId);
+      var reservations = await _appDbContext.Reservations.Include(r=> r.Room).ThenInclude(h => h.Hotel).Where(r
           => r.CustomerId == findCustomer!.CustomerId).ToListAsync();
       
       return reservations;

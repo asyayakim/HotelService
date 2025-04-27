@@ -52,6 +52,7 @@ public class ReservationController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+    [AllowAnonymous]
     [HttpGet("reservations-by-user{roomId:int}")]
     public async Task<IActionResult> GetHotelById(int roomId)
     {
@@ -66,7 +67,7 @@ public class ReservationController : ControllerBase
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
     }
-    [HttpGet("reservations-by-userId{userId:int}")]
+    [HttpGet("reservations-by-userId/{userId:int}")]
     public async Task<IActionResult> GetAllReservationsByUser( int userId)
     {
         try
