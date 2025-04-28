@@ -36,11 +36,11 @@ public class ReservationController : ControllerBase
     }
     [AllowAnonymous]
     [HttpDelete("reservation")]
-    public async Task<IActionResult> ReservationCancellingAsync([FromBody] ReservationDto request)
+    public async Task<IActionResult> ReservationCancellingAsync([FromQuery] int userId, [FromQuery] int reservationId)
     {
         try
         {
-            var reservation = await _reservationService.CancelReservationAsync(request);
+            var reservation = await _reservationService.CancelReservationAsync(userId, reservationId);
             if (reservation == null)
             {
                 return BadRequest();

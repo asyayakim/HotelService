@@ -34,11 +34,11 @@ public class ReservationService
         return newReservation;
     }
     
-    public async Task<bool> CancelReservationAsync(ReservationDto request)
+    public async Task<bool> CancelReservationAsync(int userId, int reservationId)
     {
         var reservation = await _appDbContext.Reservations.FirstOrDefaultAsync(h => h.CustomerId 
-            == request.CustomerId && 
-            h.ReservationId == request.ReservationId);
+            == userId && 
+            h.ReservationId == reservationId);
         if (reservation == null)
         {
             return false;
