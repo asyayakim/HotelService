@@ -19,7 +19,7 @@ public class ReviewService
         var customerId = await _context.Customers.FirstOrDefaultAsync(c => c.UserId == request.UserId);
         var targetReservation = await _context.Reservations.
             Include(r => r.Room)
-            .ThenInclude(r => r.HotelId)
+            .ThenInclude(room => room.Hotel)
             .FirstOrDefaultAsync(r => r.ReservationId == request.ReservationId);
         if (targetReservation == null)
             throw new Exception("Reservation not found");
@@ -39,7 +39,7 @@ public class ReviewService
             ReservationId = targetReservation.ReservationId,
             Rating = request.Rating,
             Comment = request.Comment,
-            CreatedAt = new DateOnly()
+            CreatedAt  = DateTime.UtcNow,
         };
         _context.Reviews.Add(review);
         await _context.SaveChangesAsync();

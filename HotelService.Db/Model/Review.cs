@@ -18,5 +18,5 @@ public class Review
     [Range(1, 10)]
     public int Rating { get; set; }
     public string Comment { get; set; }
-    public DateOnly CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

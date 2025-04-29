@@ -21,6 +21,7 @@ builder.Services.AddScoped<HotelRepository>();
 builder.Services.AddScoped<CsvReaderService>();
 builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<ReviewService>();
+builder.Services.AddHostedService<ReservationStatusService>();
 builder.Services.AddScoped<PaymentService>();
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("JwtSettings"));
