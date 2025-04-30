@@ -41,7 +41,7 @@ public class ReservationController : ControllerBase
         try
         {
             var reservation = await _reservationService.CancelReservationAsync(userId, reservationId);
-            if (reservation == null)
+            if (reservation == false)
             {
                 return BadRequest();
             }

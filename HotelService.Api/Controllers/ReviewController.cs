@@ -24,9 +24,10 @@ public class ReviewController : ControllerBase
         try
         {
             var review = await _reviewService.PostReviewAsync(request);
-            if (review == null)
+            if (review == false)
             {
-                return BadRequest();
+                return BadRequest("Reservation not found, " +
+                                  "customer not found, or reservation not completed.");
             }
 
             return Ok();
@@ -34,6 +35,10 @@ public class ReviewController : ControllerBase
         catch (InvalidOperationException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
         }
     }
 
@@ -90,6 +95,21 @@ public class ReviewController : ControllerBase
             if (updatedReview == null)
                 return BadRequest();
             return Ok(updatedReview);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    [AllowAnonymous]
+    [HttpDelete]
+    public async Task<IActionResult> DeleteReviewAsync( [FromQuery] int reviewId)
+    {
+        try
+        {
+            var review = await _reviewService.CancelReviewAsync( reviewId);
+            
+            return Ok();
         }
         catch (InvalidOperationException ex)
         {

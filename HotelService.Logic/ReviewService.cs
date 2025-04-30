@@ -15,7 +15,7 @@ public class ReviewService
         _context = context;
     }
 
-    public async Task<Review> PostReviewAsync(ReviewDto request)
+    public async Task<bool> PostReviewAsync(ReviewDto request)
     {
         var customerId = await _context.Customers.FirstOrDefaultAsync(c => c.UserId == request.UserId);
         var targetReservation = await _context.Reservations.
@@ -44,7 +44,7 @@ public class ReviewService
         };
         _context.Reviews.Add(review);
         await _context.SaveChangesAsync();
-        return review;
+        return true;
     }
 
     public async Task<List<Review>> GetReviewsByHotelAsync(int hotelId)
@@ -52,7 +52,8 @@ public class ReviewService
         var hotelReviews = await _context.Reviews.Where(h => h.HotelId == hotelId)
             .Include(c => c.Customer)
             .ToListAsync();
-        return hotelReviews;
+        var active = hotelReviews.Where(h => h.IsActive == true).ToList();
+        return active;
     }
 
     public async Task<List<Review?>> GetReviewsByUserAsync(int userId)
@@ -72,5 +73,15 @@ public class ReviewService
             reviewToChange.Comment = reviewDto.Comment;
         await _context.SaveChangesAsync();
         return reviewToChange;
+    }
+
+    public async Task<bool>  CancelReviewAsync(int reviewId)
+    {
+        var review = await _context.Reviews.FirstOrDefaultAsync(r => r.ReservationId == reviewId);
+        if (review == null)
+            return false;
+        review.IsActive = false;
+        await _context.SaveChangesAsync();
+        return true;
     }
 }
