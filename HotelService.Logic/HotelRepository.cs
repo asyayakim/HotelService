@@ -113,14 +113,64 @@ public class HotelRepository
     public async Task<(List<HotelSendDto> hotels, int TotalCount)> GetHotelsPaginatedFromDbAsync(int pageNumber,
         int pageSize)
     {
-        int skipCount = (pageNumber - 1) * pageSize;
-        int totalCount = await _appDbContextdb.Hotels.CountAsync();
+        var (skipCount, totalCount) = await GetValue(pageNumber, pageSize);
         var hotels = await _appDbContextdb.Hotels
             .Include(h => h.Rooms)
             .OrderBy(h => h.HotelId)
             .Skip(skipCount)
             .Take(pageSize)
             .ToListAsync();
+        var hotelDtos = HotelSendDtos(hotels);
+
+        return (hotelDtos, totalCount);
+    }
+
+    public async Task<(List<HotelSendDto> hotels, int TotalCount)> SearchHotelsPaginatedFromDbByNameAsync(int pageNumber, int pageSize, string name)
+    {
+        var (skipCount, totalCount) = await GetValue(pageNumber, pageSize);
+        
+        var hotels = await _appDbContextdb.Hotels.Where(h => h.Name.Contains(name))
+            .Include(h => h.Rooms)
+            .OrderBy(h => h.HotelId)
+            .Skip(skipCount)
+            .Take(pageSize)
+            .ToListAsync();
+        var hotelDtos = HotelSendDtos(hotels);
+
+        return (hotelDtos, totalCount);
+    }
+    public async Task<(List<HotelSendDto> hotels, int TotalCount)> SearchHotelsPaginatedFromByCityDbAsync(int pageNumber, int pageSize, string name)
+    {
+        var (skipCount, totalCount) = await GetValue(pageNumber, pageSize);
+        
+        var hotels = await _appDbContextdb.Hotels.Where(h => h.City.Contains(name))
+            .Include(h => h.Rooms)
+            .OrderBy(h => h.HotelId)
+            .Skip(skipCount)
+            .Take(pageSize)
+            .ToListAsync();
+        var hotelDtos = HotelSendDtos(hotels);
+
+        return (hotelDtos, totalCount);
+    }
+    public async Task<(List<HotelSendDto> hotels, int TotalCount)> SearchHotelsPaginatedFromByNumberDbAsync(int pageNumber, int pageSize, int number)
+    {
+        var (skipCount, totalCount) = await GetValue(pageNumber, pageSize);
+        
+        var hotels = await _appDbContextdb.Hotels.Where(h => h.Price.Equals(number))
+            .Include(h => h.Rooms)
+            .OrderBy(h => h.HotelId)
+            .Skip(skipCount)
+            .Take(pageSize)
+            .ToListAsync();
+        var hotelDtos = HotelSendDtos(hotels);
+
+        return (hotelDtos, totalCount); 
+        
+    }
+    
+    private static List<HotelSendDto> HotelSendDtos(List<Hotel> hotels)
+    {
         var hotelDtos = hotels.Select(h => new HotelSendDto
         {
             HotelId = h.HotelId,
@@ -141,7 +191,13 @@ public class HotelRepository
                 ThumbnailRoom = r.ThumbnailRoom
             }).ToList()
         }).ToList();
-
-        return (hotelDtos, totalCount);
+        return hotelDtos;
     }
+    private async Task<(int skipCount, int totalCount)> GetValue(int pageNumber, int pageSize)
+    {
+        int skipCount = (pageNumber - 1) * pageSize;
+        int totalCount = await _appDbContextdb.Hotels.CountAsync();
+        return (skipCount, totalCount);
+    }
+  
 }
