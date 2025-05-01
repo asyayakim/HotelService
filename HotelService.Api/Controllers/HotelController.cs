@@ -47,64 +47,18 @@ public class HotelController : ControllerBase
     //     }
     // }
     [HttpGet("all-hotels")]
-    public async Task<IActionResult> GetHotelsFromDbAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 4)
+    public async Task<IActionResult> SearchHotels([FromQuery] HotelSearchDto searchDto)
     {
         try
         {
-            var (hotels, totalCount) = await _service.GetHotelsPaginatedFromDbAsync(pageNumber, pageSize);
+            var (hotels, totalCount) = await _service.GetHotelsPaginatedFromDbAsync(searchDto);
 
             var response = new
             {
                 TotalRecords = totalCount,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
-                Hotels = hotels
-            };
-            return Ok(response);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}");
-            return StatusCode(500, $"An error occurred: {e.Message}");
-        }
-    }
-    [HttpGet("search-hotels-by-name")]
-    public async Task<IActionResult> GetHotelsFromDbByNameAsync([FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] string search)
-    {
-        try
-        {
-            var (hotels, totalCount) = await _service.SearchHotelsPaginatedFromDbByNameAsync(pageNumber, pageSize, search);
-
-            var response = new
-            {
-                TotalRecords = totalCount,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
-                Hotels = hotels
-            };
-            return Ok(response);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}");
-            return StatusCode(500, $"An error occurred: {e.Message}");
-        }
-    }
-    [HttpGet("search-hotels-by-price")]
-    public async Task<IActionResult> GetHotelsFromDbByPriceAsync([FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] int search)
-    {
-        try
-        {
-            var (hotels, totalCount) = await _service.SearchHotelsPaginatedFromByNumberDbAsync(pageNumber, pageSize, search);
-
-            var response = new
-            {
-                TotalRecords = totalCount,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
+                PageNumber = searchDto.PageNumber,
+                PageSize = searchDto.PageSize,
+                TotalPages = (int)Math.Ceiling((double)totalCount / searchDto.PageSize),
                 Hotels = hotels
             };
             return Ok(response);
@@ -116,31 +70,7 @@ public class HotelController : ControllerBase
         }
     }
 
-    [HttpGet("search-hotels-by-city")]
-    public async Task<IActionResult> GetHotelsFromDbByCityAsync([FromQuery] int pageNumber, [FromQuery] int pageSize,
-        [FromQuery] string search)
-    {
-        try
-        {
-            var (hotels, totalCount) =
-                await _service.SearchHotelsPaginatedFromByCityDbAsync(pageNumber, pageSize, search);
-
-            var response = new
-            {
-                TotalRecords = totalCount,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
-                Hotels = hotels
-            };
-            return Ok(response);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}");
-            return StatusCode(500, $"An error occurred: {e.Message}");
-        }
-    }
+    
 
     //  from csv
     // [HttpGet("{id}")]
