@@ -1,6 +1,8 @@
+using System.Text.Json;
 using HotelService.Db;
 using HotelService.Db.DTOs;
 using HotelService.Db.Model;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -10,10 +12,12 @@ namespace HotelService.Logic;
 public class CustomerService
 {
     private readonly AppDbContext _context;
+    private readonly HttpClient _httpClient;
 
-    public CustomerService(AppDbContext context)
+    public CustomerService(AppDbContext context, HttpClient httpClient)
     {
         _context = context;
+        _httpClient = httpClient;
     }
 
     public async Task<IActionResult?> ChangeData(CustomerDto customerDto)
@@ -113,5 +117,32 @@ public class CustomerService
     public async Task<List<FavoriteHotels>> GetAllFavoritesData()
     {
         return await _context.FavoriteHotels.ToListAsync();
+    }
+
+    public async Task<string?> UploadImageAsync(IFormFile image, string publicId, int userId )
+    {
+        using var content = new MultipartFormDataContent();
+        content.Add(new StreamContent(image.OpenReadStream()), "image", image.FileName);
+        content.Add(new StringContent(publicId), "publicId");
+
+        var response = await _httpClient.PostAsync("http://localhost:5043/api/cloudinary/upload", content); 
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorMsg = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Cloudinary error: " + errorMsg);
+            return null;
+        }
+
+        var json = await response.Content.ReadAsStringAsync();
+        using var doc = JsonDocument.Parse(json);
+        var imageUrl = doc.RootElement.GetProperty("url").GetString();
+        var user = await _context.Customers.FirstOrDefaultAsync(c
+            => c.UserId == userId);
+        if (user != null)
+        {
+            user.PictureUrl = imageUrl;
+            await _context.SaveChangesAsync();
+        }
+        return imageUrl;
     }
 }

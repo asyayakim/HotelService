@@ -50,5 +50,26 @@ public class CustomerController : ControllerBase
             throw;
         }
     }
+
+    [HttpPatch("uploadImage")]
+    public async Task<IActionResult> AddReservationAsync([FromForm] CustomerImageDto dto)
+    {
+        try
+        {
+            if (dto.Image == null)
+                return BadRequest("Image file is missing.");
+            var publicId = $"user_{dto.UserId}_avatar";
+            
+            var userIdData = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdData)) return Unauthorized();
+            var updatedCustomer = await _customerService.UploadImageAsync(dto.Image, publicId, dto.UserId);
+            return Ok(updatedCustomer);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        } 
+    }
     
 }
