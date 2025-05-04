@@ -8,11 +8,13 @@ A full-stack hotel management system for booking reservations, processing paymen
 - **Hotel Management**   
   Browse hotels with pagination, view details, favorite hotels
 - **Reservation System**   
-  Select dates, choose rooms, calculate pricing
+  Select dates, choose rooms, calculate pricing, automatic reservation process 
 - **Payment Processing** 
   Secure payment integration with card details
 - **User Profiles** 
   Manage personal info, view booking history, favorites
+- **Write a Review**
+  After reservation is completed you can leave the review
 - **Admin Dashboard** 
   Manage hotels, rooms, view all reservations (Coming Soon)
 
