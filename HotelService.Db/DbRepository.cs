@@ -73,4 +73,11 @@ public class DbRepository
     {
         return await _dbContext.Users.ToListAsync();
     }
+
+    public async Task<string?> FindCustomerAndReturnImage(User user)
+    {
+       var customer = await _dbContext.Customers.FirstOrDefaultAsync(c => c.UserId == user.UserId);
+       var image = customer.PictureUrl;
+       return image;
+    }
 }

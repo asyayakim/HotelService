@@ -1,5 +1,6 @@
 using HotelService.Db;
 using HotelService.Db.DTOs;
+using HotelService.Db.Migrations;
 using HotelService.Logic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -56,16 +57,19 @@ public class AuthController : ControllerBase
             {
                 return Unauthorized("Invalid username/email or password.");
             }
-            var token = _authService.GenerateJwtToken(user);
+            var token =  _authService.GenerateJwtToken(user);
+            var customerImage = await _dbRepository.FindCustomerAndReturnImage(user);
             return Ok(new
             {
                 Token = token,
-                User = new
+                UserDto = new
                 {
                     Id = user.UserId,
                     UserName = user.Username,
                     Email = user.Email,
-                    Role = user.Role
+                    Role = user.Role,
+                    RegistrationDate = user.RegistrationDate,
+                    ImageUrl = customerImage
                 }
             });
         }

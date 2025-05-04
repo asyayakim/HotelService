@@ -62,8 +62,11 @@ public class CustomerController : ControllerBase
             
             var userIdData = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userIdData)) return Unauthorized();
-            var updatedCustomer = await _customerService.UploadImageAsync(dto.Image, publicId, dto.UserId);
-            return Ok(updatedCustomer);
+            var imageUrl = await _customerService.UploadImageAsync(dto.Image, publicId, dto.UserId);
+            return Ok(new
+            {
+                imageUrl
+            });
         }
         catch (Exception e)
         {
