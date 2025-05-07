@@ -45,11 +45,10 @@ public class ReservationStatusService : BackgroundService
                 {
                     _logger.LogError(ex, "Error updating reservations");
                 }
-
-                var updatedCount = await dbContext.SaveChangesAsync(stoppingToken);
-
-                await Task.Delay(TimeSpan.FromMinutes(60), stoppingToken);
             }
+            await dbContext.SaveChangesAsync(stoppingToken);
+            await Task.Delay(TimeSpan.FromMinutes(60), stoppingToken);
+
         }
     }
 }

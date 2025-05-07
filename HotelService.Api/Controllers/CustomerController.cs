@@ -50,6 +50,24 @@ public class CustomerController : ControllerBase
             throw;
         }
     }
+    [Authorize]
+    [HttpGet("user")]
+    public async Task<ActionResult<CustomerDto>> GetUserDataById()
+    {
+        try
+        {
+            var userIdData = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdData)) return Unauthorized();
+            var userId = int.Parse(userIdData);
+            var customer = await _customerService.GetUserData(userId);
+            return Ok(customer);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 
     [HttpPatch("uploadImage")]
     public async Task<IActionResult> AddReservationAsync([FromForm] CustomerImageDto dto)

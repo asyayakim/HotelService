@@ -19,3 +19,4 @@ HotelService.Api/appsettings.json
 
 HotelService.sln
 HotelService.Logic/.DS_Store
+HotelService.Db/Migrations/20250429192636_FixReview.cs

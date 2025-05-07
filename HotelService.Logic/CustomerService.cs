@@ -80,7 +80,13 @@ public class CustomerService
         };
         var existingFavorite = await _context.FavoriteHotels.FirstOrDefaultAsync(h => h.HotelId == newFavorite.HotelId);
         if (existingFavorite != null)
-            return null;
+        {
+            existingFavorite.IsFavorite = true;
+            existingFavorite.DateAdded = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return existingFavorite;
+        }
+        
         await _context.FavoriteHotels.AddAsync(newFavorite);
         await _context.SaveChangesAsync();
         return newFavorite;
@@ -91,7 +97,7 @@ public class CustomerService
         var findCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.UserId == favorite.UserId);
         if (findCustomer == null)
             return;
-        var existingFav = _context.FavoriteHotels.FirstOrDefault(h =>
+        var existingFav = await _context.FavoriteHotels.FirstOrDefaultAsync(h =>
             h.HotelId == favorite.HotelId && h.CustomerId == findCustomer.CustomerId);
         if (existingFav == null)
             return;
@@ -144,5 +150,19 @@ public class CustomerService
             await _context.SaveChangesAsync();
         }
         return imageUrl;
+    }
+
+    public async Task<CustomerDto?> GetUserData(int userId)
+    {
+        var user = await _context.Customers.FirstOrDefaultAsync(c => c.UserId == userId);
+        var userToSend = new CustomerDto
+        {
+            UserId = user.UserId,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            PhoneNumber = user.PhoneNumber,
+            LoyalityPoints = user.LoyaltyPoints,
+        };
+        return userToSend;
     }
 }
