@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using HotelService.Db;
 using HotelService.Db.DTOs;
 using HotelService.Db.Model;
@@ -149,5 +150,22 @@ public class HotelController : ControllerBase
             Console.WriteLine(e.Message);
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
+    }
+    //[Authorize(Roles = "HotelManager")]
+    [HttpPatch("change-hotel-data")]
+    public async Task<IActionResult> AddReservationAsync([FromBody] HotelSendDto dto)
+    {
+        try
+        {
+            //var userIdData = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (string.IsNullOrEmpty(userIdData)) return Unauthorized();
+            var hotelDataToEdit = await _service.ChangeHotelDataAsync(dto);
+            return Ok(hotelDataToEdit);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        } 
     }
 }

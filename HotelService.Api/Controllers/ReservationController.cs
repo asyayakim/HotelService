@@ -34,6 +34,7 @@ public class ReservationController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+    //[Authorize(Roles = "HotelManager", "User")]
     [AllowAnonymous]
     [HttpDelete("reservation")]
     public async Task<IActionResult> ReservationCancellingAsync([FromQuery] int userId, [FromQuery] int reservationId)

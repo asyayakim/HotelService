@@ -159,5 +159,25 @@ public class HotelRepository
         }).ToList();
         return hotelDtos;
     }
-  
+
+    public async Task<HotelSendDto?> ChangeHotelDataAsync(HotelSendDto dto)
+    {
+        var hotels = await _appDbContextdb.Hotels
+                .Include(r => r.Rooms).ToListAsync();
+        var correctHotel = hotels.FirstOrDefault(h => h.HotelId == dto.HotelId);
+        if (correctHotel == null)
+        {
+            return null;
+        }
+        if (!string.IsNullOrEmpty(dto.Address))
+            correctHotel.Address = dto.Address;
+        if (!string.IsNullOrEmpty(dto.City))
+            correctHotel.City = dto.City;
+        if (!string.IsNullOrEmpty(dto.Country))
+            correctHotel.Country = dto.Country;
+        if (!string.IsNullOrEmpty(dto.PostalCode))
+            correctHotel.PostalCode = dto.PostalCode;
+        await _appDbContextdb.SaveChangesAsync();
+        return null;
+    }
 }
