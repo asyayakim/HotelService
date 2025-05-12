@@ -110,4 +110,20 @@ public class ReservationController : ControllerBase
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
     }
+    //[Authorize(Roles = "HotelManager")]
+    [AllowAnonymous]
+    [HttpGet("active-reservations-by-hotel{hotelId:int}")]
+    public async Task<IActionResult> GetActiveReservationsOfHotel(int hotelId)
+    {
+        try
+        {
+            var reservations = await _reservationService.GetAllActiveReservations(hotelId);
+            return Ok(reservations);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}"); 
+            return StatusCode(500, $"An error occurred: {e.Message}");
+        }
+    }
 }

@@ -61,8 +61,8 @@ public class ReservationService
     public async Task <List<ReservationDto>> GetAllReservationsByRoomIdAsync(int id)
     {
         var reservationToReturn = new List<ReservationDto>();
-        var reservationsByRoom = _appDbContext.Reservations.Where(r
-            => r.RoomId == id).ToList();
+        var reservationsByRoom = await _appDbContext.Reservations.Where(r
+            => r.RoomId == id).ToListAsync();
         var activeReservations = reservationsByRoom.Where(r => r.Status == "active" || r.Status == "paid");
         foreach (var reservation in activeReservations)
         {
@@ -83,5 +83,31 @@ public class ReservationService
           => r.CustomerId == findCustomer!.CustomerId).ToListAsync();
       
       return reservations;
+    }
+
+    public async Task<List<ReservationForHotelOwnerDto?>> GetAllActiveReservations(int hotelId)
+    {
+        var reservationToReturn = new List<ReservationForHotelOwnerDto>();
+        var findHotel = await _appDbContext.Reservations.
+            Include(r => r.Room).ToListAsync();
+        var reservations = findHotel.Where(h
+            => h.Room.HotelId == hotelId).ToList().Where(s => s.Status == "active" || s.Status == "paid");
+        foreach (var reservation in reservations)
+        {
+            var reservationObject = new ReservationForHotelOwnerDto
+            {
+                CheckInDate = reservation.CheckInDate,
+                CheckOutDate = reservation.CheckOutDate,
+                TotalPrice = reservation.TotalPrice,
+                CustomerId = reservation.CustomerId,
+                AdultsCount = reservation.AdultsCount,
+                ReservationId = reservation.ReservationId,
+                Status = reservation.Status,
+                RoomId = reservation.Room.RoomId
+            };
+                reservationToReturn.Add(reservationObject);
+        }
+
+        return reservationToReturn!;
     }
 }
