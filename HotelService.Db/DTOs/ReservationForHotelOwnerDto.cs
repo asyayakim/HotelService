@@ -10,7 +10,7 @@ public class ReservationForHotelOwnerDto
     public DateOnly CheckOutDate { get; set; }
     
     public decimal TotalPrice { get; set; }
-    public int? PaymentMethodId { get; set; }
+
     public int? AdultsCount { get; set; }
     public string? Status { get; set; }
    
