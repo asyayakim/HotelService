@@ -16,7 +16,8 @@ public class HotelController : ControllerBase
     private readonly CsvReaderService _csvReaderService;
     private readonly DbRepository _dbRepository;
 
-    public HotelController(AppDbContext context, CsvReaderService csvReaderService, DbRepository dbRepository, HotelRepository service)
+    public HotelController(AppDbContext context, CsvReaderService csvReaderService, DbRepository dbRepository,
+        HotelRepository service)
     {
         _context = context;
         _csvReaderService = csvReaderService;
@@ -71,7 +72,6 @@ public class HotelController : ControllerBase
         }
     }
 
-    
 
     //  from csv
     // [HttpGet("{id}")]
@@ -94,7 +94,7 @@ public class HotelController : ControllerBase
     {
         try
         {
-            var hotel = await _dbRepository.GetHotelsByIdAsync(id);
+            var hotel = await _service.GetHotelsByIdAsync(id);
             return Ok(hotel);
         }
         catch (Exception e)
@@ -103,6 +103,7 @@ public class HotelController : ControllerBase
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
     }
+
     [HttpPost("create-many")]
     public async Task<IActionResult> CreateManyHotels([FromBody] List<HotelCreateDto> hotels)
     {
@@ -119,6 +120,7 @@ public class HotelController : ControllerBase
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
     }
+
     [HttpPost("create")]
     public async Task<IActionResult> CreateHotel([FromBody] HotelCreateDto hotel)
     {
@@ -135,6 +137,7 @@ public class HotelController : ControllerBase
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
     }
+
     [HttpPost("add-rooms")]
     public async Task<IActionResult> AddRoomsToHotelAsync([FromBody] Room room)
     {
@@ -151,6 +154,7 @@ public class HotelController : ControllerBase
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
     }
+
     //[Authorize(Roles = "HotelManager")]
     [HttpPatch("change-hotel-data")]
     public async Task<IActionResult> AddReservationAsync([FromBody] HotelSendDto dto)
@@ -160,12 +164,17 @@ public class HotelController : ControllerBase
             //var userIdData = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             //if (string.IsNullOrEmpty(userIdData)) return Unauthorized();
             var hotelDataToEdit = await _service.ChangeHotelDataAsync(dto);
-            return Ok(hotelDataToEdit);
+            return Ok(new
+            {
+                success = true,
+                message = "Hotel data changed successfully.",
+                updatedHotel = hotelDataToEdit
+            });
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             return StatusCode(500, e.Message);
-        } 
+        }
     }
 }
