@@ -54,11 +54,12 @@ public class CustomerService
 
     public async Task<Customer> AddNewCustomerAsync(CustomerDto customerDto)
     {
+        var phoneHashed =  BCrypt.Net.BCrypt.HashPassword( customerDto.PhoneNumber);
         var newCustomer = new Customer
         {
             FirstName = customerDto.FirstName,
             LastName = customerDto.LastName,
-            PhoneNumber = customerDto.PhoneNumber,
+            PhoneNumber = phoneHashed,
             DateOfBirth = customerDto.DateOfBirth,
             UserId = customerDto.UserId
         };
