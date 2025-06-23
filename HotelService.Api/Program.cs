@@ -50,15 +50,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.UseUrls($"http://*:{port}");
 
-builder.Services.AddCors(options =>
+builder.Services.AddCors(options => 
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    options.AddPolicy("ReactPolicy", builder => 
     {
-        policy.WithOrigins("http://localhost:5174", "http://localhost:5173" ) 
+        builder.WithOrigins(
+                Environment.GetEnvironmentVariable("ALLOWED_ORIGINS")?.Split(',') 
+                ?? new[] { "http://localhost:3000" }
+            )
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+            .AllowAnyMethod();
     });
 });
 
@@ -100,9 +104,15 @@ builder.Services.AddSwaggerGen(options =>
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
-var app = builder.Build();
 
-app.UseCors("AllowFrontend");
+var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
+app.UseCors("ReactPolicy");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
