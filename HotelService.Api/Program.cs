@@ -52,17 +52,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 builder.WebHost.UseUrls($"http://*:{port}");
 
-builder.Services.AddCors(options => 
+builder.Services.AddCors(options =>
 {
-    options.AddPolicy("ReactPolicy", builder => 
-    {
-        builder.WithOrigins(
-                Environment.GetEnvironmentVariable("ALLOWED_ORIGINS")?.Split(',') 
-                ?? new[] { "http://localhost:3000" }
-            )
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("https://hotel-service-frontend-qnz43ccq1-asyayakims-projects.vercel.app")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
 });
 
 builder.Services.AddSwaggerGen(options =>
@@ -110,8 +108,9 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 }
+app.MapGet("/", () => Results.Ok("Backend is running"));
 
-app.UseCors("ReactPolicy");
+app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
