@@ -30,6 +30,7 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
+
 // builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //     .AddJwtBearer(options =>
 //     {
@@ -49,6 +50,9 @@ builder.Services.AddControllers()
 builder.Services.AddAuthorization();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// builder.Services.AddDbContext<AppDbContext>(options =>
+//     options.UseNpgsql("Host=dpg-xyz.pg.render.com;Port=5432;Database=postgres;Username=postgres;Password=secret"));
+//
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 builder.WebHost.UseUrls($"http://*:{port}");
 
@@ -113,10 +117,14 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine("Migration failed: " + ex.Message);
+    Console.WriteLine("Migration failed: " + ex.ToString());
 }
 
-app.MapGet("/", () => Results.Ok("Backend is running"));
+app.MapGet("/", (IConfiguration config) =>
+{
+    var connStr = config.GetConnectionString("DefaultConnection") ?? "Not found";
+    return Results.Ok($"Backend running. DB: {connStr}");
+});
 
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
