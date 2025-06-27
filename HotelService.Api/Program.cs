@@ -68,8 +68,8 @@ builder.Services.AddCors(options =>
                     "https://hotel-service-frontend-git-main-asyayakims-projects.vercel.app",
                     "https://hotel-service-frontend-9jbjpvofd-asyayakims-projects.vercel.app" )
                   .AllowAnyHeader()
-                  .AllowAnyMethod();
-            
+                  .AllowAnyMethod()
+                  .AllowCredentials(); 
         });
 });
 
@@ -137,8 +137,8 @@ app.MapGet("/", (IConfiguration config) =>
     return Results.Ok($"Backend running. DB: {connStr}");
 });
 
-app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
