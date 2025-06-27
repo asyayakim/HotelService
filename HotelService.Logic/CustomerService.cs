@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Configuration;
 
 namespace HotelService.Logic;
 
@@ -13,11 +14,13 @@ public class CustomerService
 {
     private readonly AppDbContext _context;
     private readonly HttpClient _httpClient;
+    private readonly string? _uploadUrl;
 
-    public CustomerService(AppDbContext context, HttpClient httpClient)
+    public CustomerService(AppDbContext context, HttpClient httpClient, IConfiguration config)
     {
         _context = context;
         _httpClient = httpClient;
+        _uploadUrl = config["ExternalApi:CloudinaryUploadUrl"];
     }
 
     public async Task<IActionResult?> ChangeData(CustomerDto customerDto)
@@ -132,7 +135,8 @@ public class CustomerService
         content.Add(new StreamContent(image.OpenReadStream()), "image", image.FileName);
         content.Add(new StringContent(publicId), "publicId");
 
-        var response = await _httpClient.PostAsync("http://localhost:5043/api/cloudinary/upload", content); 
+        var response = await _httpClient.PostAsync(_uploadUrl, content);
+        
         if (!response.IsSuccessStatusCode)
         {
             var errorMsg = await response.Content.ReadAsStringAsync();
