@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using CsvHelper.Configuration.Attributes;
 using HotelService.Db;
 using HotelService.Db.Model;
 using HotelService.Logic;
@@ -33,28 +34,27 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
 
-// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//     .AddJwtBearer(options =>
-//     {
-//         options.TokenValidationParameters = new TokenValidationParameters
-//         {
-//             ValidateIssuer = true,
-//             ValidateAudience = true,
-//             ValidateLifetime = true,
-//             ValidateIssuerSigningKey = true,
-//             ValidIssuer = builder.Configuration["JwtSettings:ValidIssuer"],
-//             ValidAudience = builder.Configuration["JwtSettings:ValidAudience"],
-//             IssuerSigningKey = new SymmetricSecurityKey(
-//                 Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]))
-//         };
-//     });
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JwtSettings:ValidIssuer"],
+            ValidAudience = builder.Configuration["JwtSettings:ValidAudience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]))
+        };
+    });
 
 builder.Services.AddAuthorization();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-// builder.Services.AddDbContext<AppDbContext>(options =>
-//     options.UseNpgsql("Host=dpg-xyz.pg.render.com;Port=5432;Database=postgres;Username=postgres;Password=secret"));
-//
+
+
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 builder.WebHost.UseUrls($"http://*:{port}");
 
@@ -69,6 +69,7 @@ builder.Services.AddCors(options =>
                     "https://hotel-service-frontend-9jbjpvofd-asyayakims-projects.vercel.app" )
                   .AllowAnyHeader()
                   .AllowAnyMethod();
+            
         });
 });
 
