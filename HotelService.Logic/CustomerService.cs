@@ -140,7 +140,7 @@ public class CustomerService
         content.Add(new StreamContent(image.OpenReadStream()), "image", image.FileName);
         content.Add(new StringContent(publicId), "publicId");
 
-        var response = await _httpClient.PostAsync(_uploadUrl, content);
+        var response = await _httpClient.PostAsync( "https://cloudinary-upload-image.onrender.com/api/cloudinary/upload", content);
         
         if (!response.IsSuccessStatusCode)
         {
