@@ -131,6 +131,11 @@ public class CustomerService
 
     public async Task<string?> UploadImageAsync(IFormFile image, string publicId, int userId )
     {
+        if (string.IsNullOrEmpty(publicId))
+        {
+            throw new ArgumentException("publicId is required.");
+        }
+
         using var content = new MultipartFormDataContent();
         content.Add(new StreamContent(image.OpenReadStream()), "image", image.FileName);
         content.Add(new StringContent(publicId), "publicId");
