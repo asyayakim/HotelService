@@ -64,9 +64,9 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins(       
-                    "https://hotel-service-frontend.vercel.app", 
-                    "https://hotel-service-frontend-git-main-asyayakims-projects.vercel.app",
-                    "https://hotel-service-frontend-9jbjpvofd-asyayakims-projects.vercel.app" )
+                    "hotel-service-frontend-kefi.vercel.app", 
+                    "hotel-service-frontend-kefi-git-main-asyayakims-projects.vercel.app",
+                    "hotel-service-frontend-kefi-2aw1b3450-asyayakims-projects.vercel.app" )
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials(); 
