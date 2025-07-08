@@ -57,22 +57,23 @@ public class HotelController : ControllerBase
     public async Task<IActionResult> GetHotelByIdFromDb(int id)
     {
         string cacheKey = $"hotel_{id}";
+        var cachedHotel = await _cache.GetStringAsync(cacheKey);
         try
         {
-            var cachedHotelJson = await _cache.GetStringAsync(cacheKey);
-            if (cachedHotelJson != null)
+            if (cachedHotel != null)
             {
-                var hotelDto = JsonSerializer.Deserialize<HotelSendDto>(cachedHotelJson);
+                Console.WriteLine("Getting hotel from Redis cache..."); 
+                var hotelDto = JsonSerializer.Deserialize<HotelSendDto>(cachedHotel);
                 return Ok(hotelDto);
             }
-
+            Console.WriteLine("Hotel not in cache, loading from DB...");
             var hotel = await _service.GetHotelsByIdAsync(id);
             if (hotel == null)
                 return NotFound($"Hotel with ID {id} not found.");
             var serialized = JsonSerializer.Serialize(hotel);
             await _cache.SetStringAsync(cacheKey, serialized, new DistributedCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) // cache timeout
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
             });
             
             return Ok(hotel);
