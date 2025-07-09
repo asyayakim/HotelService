@@ -36,7 +36,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = builder.Configuration["RedisConnection"];
+    options.Configuration = builder.Configuration["Redis:Configuration"];
     options.InstanceName = "HotelService_";
 });
 
