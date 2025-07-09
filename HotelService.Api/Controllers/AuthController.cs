@@ -57,6 +57,7 @@ public class AuthController : ControllerBase
             var user = await _dbRepository.GetUsersDataAsync(request.Username, request.Email);
             var customer = await _customerService.GetUserData(user.UserId);
             var loyaltyP = customer.LoyaltyPoints;
+            Console.WriteLine($"loyalty points: {loyaltyP}");
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
                 return Unauthorized("Invalid username/email or password.");
