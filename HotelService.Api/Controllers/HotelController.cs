@@ -57,33 +57,47 @@ public class HotelController : ControllerBase
     public async Task<IActionResult> GetHotelByIdFromDb(int id)
     {
         string cacheKey = $"hotel_{id}";
-        var cachedHotel = await _cache.GetStringAsync(cacheKey);
         try
         {
+            Console.WriteLine($"Trying to get hotel {id} from cache...");
+            var cachedHotel = await _cache.GetStringAsync(cacheKey);
+
             if (cachedHotel != null)
             {
-                Console.WriteLine("Getting hotel from Redis cache..."); 
+                Console.WriteLine($"Cache hit for hotel {id}");
                 var hotelDto = JsonSerializer.Deserialize<HotelSendDto>(cachedHotel);
                 return Ok(hotelDto);
             }
-            Console.WriteLine("Hotel not in cache, loading from DB...");
+
+            Console.WriteLine($"Cache miss for hotel {id}, fetching from DB...");
             var hotel = await _service.GetHotelsByIdAsync(id);
             if (hotel == null)
+            {
+                Console.WriteLine($"Hotel {id} not found in DB");
                 return NotFound($"Hotel with ID {id} not found.");
+            }
+            try {
+                var serializedtest = JsonSerializer.Serialize(hotel);
+            } catch (Exception e) {
+                Console.WriteLine("Serialization error: " + e.Message);
+            }
+
             var serialized = JsonSerializer.Serialize(hotel);
             await _cache.SetStringAsync(cacheKey, serialized, new DistributedCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
             });
-            
+
+            Console.WriteLine($"Hotel {id} fetched and cached");
             return Ok(hotel);
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error in GetHotels: {e.Message}\n{e.StackTrace}");
+            Console.WriteLine($"ERROR in GetHotelByIdFromDb: {e.Message}\n{e.StackTrace}");
             return StatusCode(500, $"An error occurred: {e.Message}");
         }
     }
+
 
     [HttpPost("create-many")]
     public async Task<IActionResult> CreateManyHotels([FromBody] List<HotelCreateDto> hotels)
