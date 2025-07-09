@@ -14,11 +14,13 @@ public class AuthController : ControllerBase
 {
     private readonly AuthService _authService;
     private readonly DbRepository _dbRepository;
+    private readonly CustomerService _customerService;
 
-    public AuthController(AuthService authService, DbRepository dbRepository)
+    public AuthController(AuthService authService, DbRepository dbRepository, CustomerService customerService)
     {
         _authService = authService;
         _dbRepository = dbRepository;
+        _customerService = customerService;
     }
 
     [AllowAnonymous]
@@ -53,6 +55,8 @@ public class AuthController : ControllerBase
         try
         {
             var user = await _dbRepository.GetUsersDataAsync(request.Username, request.Email);
+            var customer = await _customerService.GetUserData(user.UserId);
+            var loyaltyP = customer.LoyaltyPoints;
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
                 return Unauthorized("Invalid username/email or password.");
@@ -69,7 +73,8 @@ public class AuthController : ControllerBase
                     Email = user.Email,
                     Role = user.Role,
                     RegistrationDate = user.RegistrationDate,
-                    ImageUrl = customerImage
+                    ImageUrl = customerImage,
+                    LoyaltyPoints = loyaltyP
                 }
             });
         }

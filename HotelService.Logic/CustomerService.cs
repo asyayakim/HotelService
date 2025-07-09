@@ -171,7 +171,7 @@ public class CustomerService
             FirstName = user.FirstName,
             LastName = user.LastName,
             PhoneNumber = user.PhoneNumber,
-            LoyalityPoints = user.LoyaltyPoints,
+            LoyaltyPoints = user.LoyaltyPoints,
             
         };
         return userToSend;

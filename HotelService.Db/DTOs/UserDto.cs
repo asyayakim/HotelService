@@ -11,4 +11,5 @@ public class UserDto
     public string Role { get; set; } 
     public DateTime? RegistrationDate { get; set; }
     public string? ImageUrl { get; set; }
+    public int? LoyaltyPoints { get; set; }
 }
