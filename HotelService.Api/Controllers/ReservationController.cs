@@ -27,7 +27,8 @@ public class ReservationController : ControllerBase
             {
                 return BadRequest();
             }
-            return Ok(reservation);
+            return Ok(
+                reservation);
         }
         catch (InvalidOperationException ex)
         {

@@ -7,12 +7,11 @@ namespace HotelService.Logic;
 
 public class ReservationService
 {
-    private readonly DbRepository _dbRepository;
+   
     private readonly AppDbContext _appDbContext;
 
-    public ReservationService(DbRepository dbRepository, AppDbContext appDbContext)
+    public ReservationService( AppDbContext appDbContext)
     {
-        _dbRepository = dbRepository;
         _appDbContext = appDbContext;
     }
 
@@ -29,6 +28,13 @@ public class ReservationService
             RoomId = request.RoomId,
             PaymentMethodId = request.PaymentMethodId
         };
+        var customer = await _appDbContext.Customers.FindAsync(request.CustomerId)
+                       ?? throw new InvalidOperationException("Customer not found");
+        if (request.PointsUsed > customer.LoyaltyPoints)
+            throw new InvalidOperationException("Not enough loyalty points.");
+
+        customer.LoyaltyPoints -= request.PointsUsed;
+
         await _appDbContext.Reservations.AddAsync(newReservation);
         await _appDbContext.SaveChangesAsync();
         return newReservation;

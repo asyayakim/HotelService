@@ -16,5 +16,7 @@ public class ReservationDto
     public int PaymentMethodId { get; set; }
     public int AdultsCount { get; set; }
     public string? ThumbnailUrl { get; set; }
+    public int PointsUsed { get; set; }
+    public int? PointsDiscount { get; set; }
     
 }

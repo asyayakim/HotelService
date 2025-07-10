@@ -16,7 +16,7 @@ public class Customer
   
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public int LoyaltyPoints { get; set; } = 0;
+    public int LoyaltyPoints { get; set; } = 10;
     public string PhoneNumber { get; set; }
     [Column(TypeName = "date")]
     public DateOnly? DateOfBirth { get; set; } 
