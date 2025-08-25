@@ -71,7 +71,7 @@ public class ReviewController : ControllerBase
             var userIdData = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userIdData)) return Unauthorized();
             var reviews = await _reviewService.GetReviewsByUserAsync(userId);
-            if (reviews.Count == 0)
+            if (reviews.Count == null || !reviews.Any())
             {
                 return Ok(new List<ReviewDto>());
             }
