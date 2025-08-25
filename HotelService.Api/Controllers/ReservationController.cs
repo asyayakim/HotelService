@@ -75,6 +75,10 @@ public class ReservationController : ControllerBase
         try
         {
             var reservations = await _reservationService.GetAllReservationsByUserAsync(userId);
+            if (reservations.Count() == 0)
+            {
+                return NotFound("No Reservations Found");
+            }
             return Ok(reservations);
         }
         catch (Exception e)

@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using HotelService.Db.DTOs;
+using HotelService.Db.Model;
 using HotelService.Logic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -72,7 +73,7 @@ public class ReviewController : ControllerBase
             var reviews = await _reviewService.GetReviewsByUserAsync(userId);
             if (reviews.Count == 0)
             {
-                return NotFound("No reviews found for user.");
+                return Ok(new List<ReviewDto>());
             }
 
             return Ok(reviews);
