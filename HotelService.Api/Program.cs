@@ -73,7 +73,8 @@ builder.Services.AddCors(options =>
                     "https://hotel-service-frontend-kefi.vercel.app",
                     "https://hotel-service-frontend-kefi-git-main-asyayakims-projects.vercel.app",
                     "https://hotel-service-frontend-kefi-2aw1b3450-asyayakims-projects.vercel.app",
-                    "https://hotel-service-frontend-kefi-anmgmdayf-asyayakims-projects.vercel.app" 
+                    "https://hotel-service-frontend-kefi-anmgmdayf-asyayakims-projects.vercel.app",
+                    "http://localhost:5173/"
                 )
                   .AllowAnyHeader()
                   .AllowAnyMethod()
